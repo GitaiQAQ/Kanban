@@ -1,0 +1,81 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'com.android.application'
+
+apply from: '../buildscripts/utils.gradle'
+
+def buildTime() {
+    def df = new SimpleDateFormat("MMddHHmm")
+    df.setTimeZone(TimeZone.getDefault())
+    return df.format(new Date())
+}
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    defaultConfig {
+        applicationId config.applicationId
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName + buildTime()
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        release {
+            if (config.releaseSigning.storePassword != null) {
+                storeFile file(config.releaseSigning.storeFile)
+                storePassword config.releaseSigning.storePassword
+                keyAlias config.releaseSigning.alias
+                keyPassword config.releaseSigning.aliasPassword
+            }/*else{
+                storeFile file(System.console().readLine("\n\$ Enter keystore path: "))
+                storePassword System.console().readLine("\n\$ Enter keystore password: ")
+                keyAlias System.console().readLine("\n\$ Enter key alias: ")
+                keyPassword System.console().readLine("\n\$ Enter key password: ")
+            }*/
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix "-${getCiBuildNumber()}"
+        }
+        release {
+            zipAlignEnabled true
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name.replace("app",  config.applicationId)
+
+                fileName = fileName.replace(".apk", ""
+                    + "-c"
+                    + defaultConfig.versionCode
+                    + "-v"
+                    + defaultConfig.versionName
+                    + ".apk")
+
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+
+}
+
+dependencies {
+    provided fileTree(dir: 'deps', include: ['*.jar'])
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}

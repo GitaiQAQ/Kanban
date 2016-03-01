@@ -1,0 +1,52 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+subprojects {
+    ext {
+        config = [
+                applicationId : "me.gitai.fuckqq",
+
+                compileSdkVersion : 23,
+                buildToolsVersion : "23.0.2",
+                minSdkVersion : 15,
+                targetSdkVersion : 23,
+
+                releaseSigning : [
+                        storeFile : System.getenv("KEYSTORE"),
+                        storePassword : System.getenv("KEYSTORE_PASSWORD"),
+                        alias : System.getenv("KEY_ALIAS"),
+                        aliasPassword: System.getenv("KEY_PASSWORD")
+                ],
+
+                versionCode : 1,
+                versionName : "0.0.1-beta"
+        ]
+
+        versions = [
+            androidSupport : "23.1.1",
+            junit:"4.1.2",
+            robolectric:"3.0-rc3",
+            espresso:"2.2.1",
+            runner:"0.4.1",
+            fastjson:"1.2.7"
+        ]
+    }
+}

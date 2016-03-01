@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">FuckQQ</string>
+    <string name="title">FuckQQ</string>
+    <string name="log">Log</string>
+    <string name="clear" translatable="false">clear</string>
+    
+    <!-- Xposed -->
+    <string name="intercept_xposed_summary" translatable="false">Allow SMS Blocker, via kitkat-sms-patch</string>
+</resources>
+

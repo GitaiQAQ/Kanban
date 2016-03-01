@@ -1,0 +1,9 @@
+me.gitai.fuckqq.xposed.XposedMessageHandlerHook -> me.gitai.fuckqq.xposed.XposedMessageHandlerHook:
+    void <init>() -> <init>
+    void printDeviceInfo() -> a
+    void hookMessageHandler(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> a
+    void handleLoadPackage(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> handleLoadPackage
+me.gitai.fuckqq.xposed.XposedMessageHandlerHook$1 -> me.gitai.fuckqq.xposed.a:
+    me.gitai.fuckqq.xposed.XposedMessageHandlerHook this$0 -> a
+    void <init>(me.gitai.fuckqq.xposed.XposedMessageHandlerHook) -> <init>
+    void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook$MethodHookParam) -> beforeHookedMethod
