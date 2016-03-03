@@ -22,7 +22,7 @@ task clean(type: Delete) {
 subprojects {
     ext {
         config = [
-                applicationId : "me.gitai.fuckqq",
+                applicationId : "me.gitai.phuckqq",
 
                 compileSdkVersion : 23,
                 buildToolsVersion : "23.0.2",

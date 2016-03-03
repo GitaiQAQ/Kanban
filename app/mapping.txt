@@ -1,9 +1,146 @@
-me.gitai.fuckqq.xposed.XposedMessageHandlerHook -> me.gitai.fuckqq.xposed.XposedMessageHandlerHook:
+me.gitai.phuckqq.util.StringUtils -> me.gitai.a.a.a:
+    char[] HEX_DIGITS -> a
+    boolean isEmpty(java.lang.CharSequence) -> a
+    void <clinit>() -> <clinit>
+me.gitai.phuckqq.data.Message -> me.gitai.phuckqq.a.a:
+    java.lang.String actMsgContentValue -> b
+    java.lang.String action -> c
+    int bizType -> d
+    int counter -> e
+    java.lang.CharSequence emoRecentMsg -> f
+    long fileSize -> g
+    int fileType -> h
+    boolean hasReply -> i
+    boolean isCacheValid -> j
+    java.lang.String latestNormalMsgString -> k
+    java.lang.String nickName -> l
+    java.lang.String pttUrl -> m
+    long shareAppID -> n
+    int unReadNum -> o
+    void <init>(java.lang.Object) -> <init>
+    java.lang.String getActMsgContentValue() -> a
+    java.lang.String getAction() -> b
+    int getBizType() -> c
+    int getCounter() -> d
+    java.lang.CharSequence getEmoRecentMsg() -> e
+    long getFileSize() -> f
+    int getFileType() -> g
+    boolean isHasReply() -> h
+    boolean isCacheValid() -> i
+    java.lang.String getLatestNormalMsgString() -> j
+    java.lang.String getNickName() -> k
+    java.lang.String getPttUrl() -> l
+    long getShareAppID() -> m
+    int getUnReadNum() -> n
+    java.lang.String toString() -> toString
+me.gitai.phuckqq.data.MessageRecord -> me.gitai.phuckqq.a.b:
+    java.lang.String[] QUERY_OLD_TABLE_FIELDS_ARRAY -> a
+    int extraflag -> b
+    java.lang.String frienduin -> c
+    boolean isValid -> d
+    boolean isread -> e
+    int issend -> f
+    int istroop -> g
+    int longMsgCount -> h
+    int longMsgId -> i
+    int longMsgIndex -> j
+    java.lang.String msg -> k
+    long msgUid -> l
+    int msgtype -> m
+    java.lang.String selfuin -> n
+    int sendFailCode -> o
+    java.lang.String senderuin -> p
+    long shmsgseq -> q
+    long time -> r
+    long uniseq -> s
+    int versionCode -> t
+    long vipBubbleID -> u
+    void <init>(java.lang.Object) -> <init>
+    int getExtraflag() -> o
+    java.lang.String getFrienduin() -> p
+    boolean isread() -> q
+    int getIssend() -> r
+    int getIstroop() -> s
+    int getLongMsgCount() -> t
+    boolean isLongMsg() -> u
+    int getLongMsgId() -> v
+    int getLongMsgIndex() -> w
+    java.lang.String getMsg() -> x
+    long getMsgUid() -> y
+    int getMsgtype() -> z
+    java.lang.String getSelfuin() -> A
+    int getSendFailCode() -> B
+    java.lang.String getSenderuin() -> C
+    long getShmsgseq() -> D
+    long getTime() -> E
+    long getUniseq() -> F
+    long getVipBubbleID() -> G
+    java.lang.String toString() -> toString
+    void <clinit>() -> <clinit>
+me.gitai.phuckqq.data.ReflectedObject -> me.gitai.phuckqq.a.c:
+    java.lang.Object mObject -> a
+    void <init>(java.lang.Object) -> <init>
+    java.lang.Object getField(java.lang.String) -> a
+    boolean getBooleanField(java.lang.String) -> b
+    int getIntField(java.lang.String) -> c
+    long getLongField(java.lang.String) -> d
+    java.lang.String toString() -> toString
+me.gitai.phuckqq.data.SessionInfo -> me.gitai.phuckqq.a.d:
+    java.lang.String uin -> a
+    int uintype -> b
+    java.lang.String phonenum -> c
+    java.lang.String uinname -> d
+    java.lang.String troop_uin -> e
+    void <init>(java.lang.Object) -> <init>
+    java.lang.String getUin() -> a
+    int getUintype() -> b
+    java.lang.String getPhonenum() -> c
+    java.lang.String getUinnamer() -> d
+    java.lang.String getTroopUin() -> e
+    java.lang.String toString() -> toString
+me.gitai.phuckqq.xposed.XposedMessageHandlerHook -> me.gitai.phuckqq.xposed.XposedMessageHandlerHook:
+    java.lang.Object mRuntime -> a
+    java.util.HashMap sessionInfos -> b
+    java.lang.Class QQAppInterface -> c
+    java.lang.Class SessionInfo -> d
+    java.lang.Class ChatActivityFacade -> e
+    android.content.Context mContext -> f
     void <init>() -> <init>
     void printDeviceInfo() -> a
-    void hookMessageHandler(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> a
+    void a1392(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> a
+    void a1405(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> b
+    void e2474(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> c
+    void a3625(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> d
+    void sendByUid(java.lang.String,java.lang.String) -> a
+    void sendBySessionInfo(java.lang.Object,java.lang.String) -> a
     void handleLoadPackage(de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> handleLoadPackage
-me.gitai.fuckqq.xposed.XposedMessageHandlerHook$1 -> me.gitai.fuckqq.xposed.a:
-    me.gitai.fuckqq.xposed.XposedMessageHandlerHook this$0 -> a
-    void <init>(me.gitai.fuckqq.xposed.XposedMessageHandlerHook) -> <init>
+    android.content.Context access$000(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> a
+    android.content.Context access$002(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,android.content.Context) -> a
+    java.lang.Class access$100(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> b
+    java.lang.Class access$102(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.Class) -> a
+    java.lang.Class access$200(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> c
+    java.lang.Class access$202(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.Class) -> b
+    java.lang.Object access$300(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> d
+    java.lang.Object access$302(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.Object) -> a
+    java.util.HashMap access$400(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> e
+    java.lang.Class access$500(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> f
+    java.lang.Class access$502(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.Class) -> c
+    void access$600(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.Object,java.lang.String) -> a
+    void access$700(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,java.lang.String,java.lang.String) -> a
+me.gitai.phuckqq.xposed.XposedMessageHandlerHook$1 -> me.gitai.phuckqq.xposed.a:
+    me.gitai.phuckqq.xposed.XposedMessageHandlerHook this$0 -> a
+    void <init>(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> <init>
+    void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook$MethodHookParam) -> beforeHookedMethod
+me.gitai.phuckqq.xposed.XposedMessageHandlerHook$2 -> me.gitai.phuckqq.xposed.b:
+    de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam val$lpparam -> a
+    me.gitai.phuckqq.xposed.XposedMessageHandlerHook this$0 -> b
+    void <init>(me.gitai.phuckqq.xposed.XposedMessageHandlerHook,de.robv.android.xposed.callbacks.XC_LoadPackage$LoadPackageParam) -> <init>
+    void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook$MethodHookParam) -> beforeHookedMethod
+me.gitai.phuckqq.xposed.XposedMessageHandlerHook$3 -> me.gitai.phuckqq.xposed.c:
+    me.gitai.phuckqq.xposed.XposedMessageHandlerHook this$0 -> a
+    void <init>(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> <init>
+    void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook$MethodHookParam) -> beforeHookedMethod
+me.gitai.phuckqq.xposed.XposedMessageHandlerHook$4 -> me.gitai.phuckqq.xposed.d:
+    me.gitai.phuckqq.xposed.XposedMessageHandlerHook this$0 -> a
+    void <init>(me.gitai.phuckqq.xposed.XposedMessageHandlerHook) -> <init>
     void beforeHookedMethod(de.robv.android.xposed.XC_MethodHook$MethodHookParam) -> beforeHookedMethod

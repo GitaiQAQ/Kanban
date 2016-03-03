@@ -22,8 +22,8 @@
 -dontwarn com.mokee.os.**
 -dontwarn com.mokee.security.**
 
--keep public class me.gitai.fuckqq.xposed.*
--keep public class me.gitai.fuckqq.utils.XposedUtils{
+-keep public class me.gitai.phuckqq.xposed.*
+-keep public class me.gitai.phuckqq.utils.XposedUtils{
 	public static boolean isModuleEnabled();
 	public static int getModuleVersion();
 }

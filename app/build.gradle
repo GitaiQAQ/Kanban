@@ -4,12 +4,6 @@ apply plugin: 'com.android.application'
 
 apply from: '../buildscripts/utils.gradle'
 
-def buildTime() {
-    def df = new SimpleDateFormat("MMddHHmm")
-    df.setTimeZone(TimeZone.getDefault())
-    return df.format(new Date())
-}
-
 android {
     compileSdkVersion config.compileSdkVersion
     buildToolsVersion config.buildToolsVersion
@@ -19,7 +13,7 @@ android {
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
-        versionName config.versionName + buildTime()
+        versionName config.versionName
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -43,13 +37,13 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            versionNameSuffix "-${getCiBuildNumber()}"
+            versionNameSuffix "-${getBuildTime()}-${getCiBuildNumber()}"
         }
         release {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -58,9 +52,9 @@ android {
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                def fileName = outputFile.name.replace("app",  config.applicationId)
+                //def fileName = outputFile.name.replace("app",  config.applicationId)
 
-                fileName = fileName.replace(".apk", ""
+                def fileName = outputFile.name.replace(".apk", ""
                     + "-c"
                     + defaultConfig.versionCode
                     + "-v"
