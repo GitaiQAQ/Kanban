@@ -30,12 +30,11 @@ import me.gitai.phuckqq.BuildConfig;
 import me.gitai.phuckqq.Constant;
 import me.gitai.phuckqq.data.Message;
 import me.gitai.phuckqq.data.SessionInfo;
-import me.gitai.phuckqq.util.Config;
 
 /**
  * Created by gitai on 16-2-29.
  */
-public class XposedMessageHandlerHook implements IXposedHookLoadPackage {
+public class ChatHook implements IXposedHookLoadPackage {
 
     private HashMap<String, String> uins = new HashMap<>();
 
@@ -45,11 +44,6 @@ public class XposedMessageHandlerHook implements IXposedHookLoadPackage {
     private Class<?> QQAppInterface,SessionInfo,ChatActivityFacade;
 
     private Context mContext;
-    private Config mConfig;
-
-    private void initConfig() {
-        mConfig = new Config();
-    }
 
     private static void printDeviceInfo() {
         /*XposedBridge.log("Phone manufacturer: " + Build.MANUFACTURER);
@@ -181,8 +175,8 @@ public class XposedMessageHandlerHook implements IXposedHookLoadPackage {
     }
 
     private void sendBySessionInfo(SessionInfo sessionInfo, String message){
-        if (!mConfig.getBoolean(Constant.KEY_SEND_ENABLE, false)) return;
-        if (!((String)mConfig.getConfig(Constant.KEY_RES_LIST, "")).contains(sessionInfo.getUin())) return;
+        //if (!mConfig.getBoolean(Constant.KEY_SEND_ENABLE, false)) return;
+        //if (!((String)mConfig.getConfig(Constant.KEY_RES_LIST, "")).contains(sessionInfo.getUin())) return;
         XposedHelpers.callStaticMethod(ChatActivityFacade, "a",
                 new Class<?>[]{QQAppInterface, Context.class, SessionInfo, String.class, ArrayList.class},
                 mRuntime, AndroidAppHelper.currentApplication(), sessionInfo.getObject(), message, null);
@@ -190,8 +184,9 @@ public class XposedMessageHandlerHook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        initConfig();
-        if ("com.tencent.qq.kddi".equals(lpparam.packageName) && mConfig.getBoolean(Constant.KEY_ENABLE, false)) {
+        //initConfig();
+        //&& mConfig.getBoolean(Constant.KEY_ENABLE, false)
+        if ("com.tencent.qq.kddi".equals(lpparam.packageName)) {
             XposedBridge.log("PhuckQQ initializing...");
             printDeviceInfo();
             try {

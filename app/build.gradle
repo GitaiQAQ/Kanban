@@ -37,7 +37,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            versionNameSuffix "-${getBuildTime()}-${getCiBuildNumber()}"
+            //versionNameSuffix "-${getBuildTime()}-${getCiBuildNumber()}"
         }
         release {
             zipAlignEnabled true
