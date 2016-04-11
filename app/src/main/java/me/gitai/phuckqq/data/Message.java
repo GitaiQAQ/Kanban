@@ -5,6 +5,7 @@ import me.gitai.phuckqq.util.StringUtils;
 /**
  * Created by dphdjy on 16-3-2.
  */
+//com.tencent.mobileqq.app.message.QQMessageFacade$Message
 public class Message extends MessageRecord{
     private String actMsgContentValue;
     private String action = null;
@@ -112,7 +113,7 @@ public class Message extends MessageRecord{
 
     @Override
     public String toString() {
-        return new StringBuilder("--Dump Message--,")
+        return new StringBuilder("--Dump Message--")
                 .append(",actMsgContentValue:").append(getActMsgContentValue())
                 .append(",action:").append(getAction())
                 .append(",bizType:").append(getBizType())
@@ -128,6 +129,7 @@ public class Message extends MessageRecord{
                 .append(",pttUrl:").append(getPttUrl())
                 .append(",shareAppID:").append(getShareAppID())
                 .append(",unReadNum:").append(getUnReadNum())
+                .append(super.toString())
                 .toString();
     }
 

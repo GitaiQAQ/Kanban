@@ -265,7 +265,6 @@ public class MessageRecord extends ReflectedObject{
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("--Dump MessageRecord--,")
-                .append(super.toString())
                 .append(",selfUin:").append(getSelfuin())
                 .append(",friendUin:").append(getFrienduin())
                 .append(",senderUin:").append(getSenderuin())
@@ -286,6 +285,6 @@ public class MessageRecord extends ReflectedObject{
                     .append(",longMsgCount:").append(getLongMsgCount())
                     .append(",longMsgIndex:").append(getLongMsgIndex());
         }
-        return stringBuilder.toString();
+        return stringBuilder.append(super.toString()).toString();
     }
 }
