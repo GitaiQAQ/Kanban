@@ -5,7 +5,7 @@ import java.util.HashMap;
 import android.os.Bundle;
 
 /**
- * Created by dphdjy on 16-3-12.
+ * Created by gitai on 16-3-12.
  */
 public class ServiceMsg extends ReflectedObject{
     private String tag = "ToServiceMsg";// ToServiceMsg || FromServiceMsg merge sign
@@ -14,9 +14,7 @@ public class ServiceMsg extends ReflectedObject{
     private int appSeq = -1;
     public HashMap attributes = new HashMap();
     public Bundle extraData = new Bundle();
-    //TODO:
-    //import com.tencent.mobileqq.msf.sdk.MsfCommand;
-    //private MsfCommand msfCommand = MsfCommand.unknown;
+    //private MsfCommand msfCommand = MsfCommand.unknown; //import com.tencent.mobileqq.msf.sdk.MsfCommand;
     private String serviceCmd;
     private int ssoSeq = -1;
     private String uin;
@@ -39,6 +37,11 @@ public class ServiceMsg extends ReflectedObject{
 
     public ServiceMsg(Object obj) {
         super(obj);
+        if(this.tag.equals("ToServiceMsg")) {
+            extraData.putByte("version", toVersion);
+        }else{
+            extraData.putByte("version", fromVersion);
+        }
     }
 
     public ServiceMsg(String tag,Object obj) {
@@ -70,7 +73,10 @@ public class ServiceMsg extends ReflectedObject{
         return extraData = (Bundle)getField("extraData");
     }
 
-    //TODO:
+    /*public MsfCommand getMsfCommand() {
+        if (msfCommand != null)return msfCommand;
+        return msfCommand = (MsfCommand)getField("msfCommand");
+    }*/
 
     public String getServiceCmd() {
         if (!StringUtils.isEmpty(serviceCmd))return serviceCmd;
@@ -90,6 +96,10 @@ public class ServiceMsg extends ReflectedObject{
     public byte[] getWupBuffer() {
         if (wupBuffer != null)return wupBuffer;
         return wupBuffer = (byte[])getField("wupBuffer");
+    }
+
+    public void putWupBuffer(byte[] paramArrayOfByte) {
+        wupBuffer = paramArrayOfByte;
     }
 
     // FromServiceMsg only
@@ -151,7 +161,7 @@ public class ServiceMsg extends ReflectedObject{
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("--Dump " + getTag() + "--,")
+        StringBuilder sb = new StringBuilder("--Dump " + getTag() + "--")
                 .append(",appId:").append(getAppId())
                 .append(",appSeq:").append(getAppSeq())
                 .append(",attributes:").append(getAttributes())
