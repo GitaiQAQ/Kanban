@@ -3,7 +3,7 @@ package me.gitai.phuckqq.data;
 /**
  * Created by gitai on 16-4-10.
  */
-/*public enum MsfCommand {
+public enum MsfCommand {
   static {
     registerMsfService = new MsfCommand("registerMsfService", 1);
     unRegisterMsfService = new MsfCommand("unRegisterMsfService", 2);
@@ -193,4 +193,4 @@ package me.gitai.phuckqq.data;
     arrayOfMsfCommand[92] = processGuardModeChange;
     $VALUES = arrayOfMsfCommand;
   }
-}*/
+}

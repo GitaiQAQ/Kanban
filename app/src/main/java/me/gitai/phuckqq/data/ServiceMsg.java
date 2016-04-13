@@ -1,6 +1,6 @@
 package me.gitai.phuckqq.data;
 
-import me.gitai.phuckqq.util.StringUtils;
+import me.gitai.library.utils.StringUtils;
 import java.util.HashMap;
 import android.os.Bundle;
 

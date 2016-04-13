@@ -17,8 +17,17 @@ public class Constant {
 
     public static final String PATH_DATA                    = Environment.getExternalStorageDirectory().getAbsoluteFile() + File.separator + MODULE_NAME;
     public static final String PATH_DATA_LOG                = PATH_DATA + File.separator + "logs";
+    public static final String PATH_DATA_CRASH              = PATH_DATA + File.separator + "crash";
     public static final String PATH_DATA_CONFIG             = PATH_DATA + File.separator + "configs";
     public static final String PATH_DATA_SCRIPT             = PATH_DATA + File.separator + "script";
+
+    public static final String ACTION_RECEIVER              = "me.gitai.phuckqq.message.reveiver";
+
+    public static final String KEY_CONTACTS_COUNT          = ACTION_RECEIVER + ".contacts.count";
+    public static final String KEY_UNREADS_COUNT           = ACTION_RECEIVER + ".unread.count";
+    public static final String KEY_NEEDTICKER              = ACTION_RECEIVER + ".needTicker";
+    public static final String KEY_MESSAGES                 = ACTION_RECEIVER + ".messages";
+    public static final String KEY_CURRENT_MESSAGE         = ACTION_RECEIVER + ".currentMessage";
 
     public static final String KEY_ENABLE                   = "enable";
     public static final String KEY_SEND_ENABLE              = "enablesend";

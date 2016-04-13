@@ -1,14 +1,18 @@
 package me.gitai.phuckqq.data;
 
 import de.robv.android.xposed.XposedHelpers;
+import me.gitai.library.utils.StringUtils;
+
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.app.Notification;
-import me.gitai.phuckqq.util.StringUtils;
+
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.content.Context;
 
 /**
- * Created by dphdjy on 16-4-11.
+ * Created by gitai on 16-4-11.
  */
 public class QQNotification {
 	public Notification mNotification;
@@ -20,6 +24,7 @@ public class QQNotification {
 
 	public String mGroupName,mNickName,mNickNameShort,mMessageText = "";
 
+	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public QQNotification(int id, Notification notification) {
 		this.mId = id;
 		this.number = notification.number;

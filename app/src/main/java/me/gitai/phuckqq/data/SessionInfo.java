@@ -1,9 +1,9 @@
 package me.gitai.phuckqq.data;
 
-import me.gitai.phuckqq.util.StringUtils;
+import me.gitai.library.utils.StringUtils;
 
 /**
- * Created by dphdjy on 16-3-2.
+ * Created by gitai on 16-3-2.
  */
 public class SessionInfo extends ReflectedObject{
 	private String uin;	//a
@@ -49,7 +49,7 @@ public class SessionInfo extends ReflectedObject{
 
     @Override
     public String toString() {
-        return new StringBuilder("--Dump SessionInfo--,")
+        return new StringBuilder("--Dump SessionInfo--")
                 .append(super.toString())
                 .append(",uin:").append(getUin())
                 .append(",uintype:").append(getUintype())

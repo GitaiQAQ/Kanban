@@ -2,22 +2,26 @@ package me.gitai.phuckqq.data;
 
 import android.os.Parcelable;
 import android.os.Parcel;
-import de.robv.android.xposed.XposedHelpers;
 
 /**
- * Created by dphdjy on 16-3-2.
+ * Created by gitai on 16-3-2.
  */
 public class ReflectedObject implements Parcelable{
     public static final int DETACHED = 1002;
     public static final int MANAGED = 1001;
     public static final int NEW = 1000;
     public static final int REMOVED = 1003;
-    private long _id = -1;
-    private int _status = 1000;
+    protected long _id = -1;
+    protected int _status = 1000;
 
     private Object mObject = null;
 
+    private boolean inXposed = false;
+
+    public ReflectedObject() {}
+
     public ReflectedObject(Object mObject) {
+        this.inXposed = true;
         this.mObject = mObject;
     }
 
@@ -25,40 +29,55 @@ public class ReflectedObject implements Parcelable{
         return mObject;
     }
 
+    public String getStringField(String fieldName){
+        if (!inXposed) return null;
+        Object obj = de.robv.android.xposed.XposedHelpers.getObjectField(mObject, fieldName);
+        return (obj == null ? null: new StringBuilder((String)obj).toString());
+    }
+
     public Object getField(String fieldName){
-        return XposedHelpers.getObjectField(mObject, fieldName);
+        if (!inXposed) return null;
+        return de.robv.android.xposed.XposedHelpers.getObjectField(mObject, fieldName);
     }
 
     public boolean getBooleanField(String fieldName){
-        return XposedHelpers.getBooleanField(mObject, fieldName);
+        if (!inXposed) return false;
+        return de.robv.android.xposed.XposedHelpers.getBooleanField(mObject, fieldName);
     }
 
     public byte getByteField(String fieldName){
-        return XposedHelpers.getByteField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getByteField(mObject, fieldName);
     }
 
     public char getCharField(String fieldName){
-        return XposedHelpers.getCharField(mObject, fieldName);
+        if (!inXposed) return '\u0000';
+        return de.robv.android.xposed.XposedHelpers.getCharField(mObject, fieldName);
     }
 
     public double getDoubleField(String fieldName){
-        return XposedHelpers.getDoubleField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getDoubleField(mObject, fieldName);
     }
 
     public float getFloatField(String fieldName){
-        return XposedHelpers.getFloatField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getFloatField(mObject, fieldName);
     }
 
     public int getIntField(String fieldName){
-        return XposedHelpers.getIntField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getIntField(mObject, fieldName);
     }
 
     public long getLongField(String fieldName){
-        return XposedHelpers.getLongField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getLongField(mObject, fieldName);
     }
 
     public short getShortField(String fieldName){
-        return XposedHelpers.getShortField(mObject, fieldName);
+        if (!inXposed) return 0;
+        return de.robv.android.xposed.XposedHelpers.getShortField(mObject, fieldName);
     }
 
     public long getId() {
@@ -67,7 +86,7 @@ public class ReflectedObject implements Parcelable{
     }
 
     public int getStatus() {
-        if (_status > 0) return _status;
+        if (_status == 1000) return _status;
         return _status = getIntField("_status");
     }
 

@@ -1,9 +1,12 @@
 package me.gitai.phuckqq.data;
 
-import me.gitai.phuckqq.util.StringUtils;
+import android.os.Parcel;
+import me.gitai.library.utils.StringUtils;
 
+import android.os.Parcelable;
+import android.os.Parcel;
 /**
- * Created by dphdjy on 16-3-2.
+ * Created by gitai on 16-3-2.
  */
 public class MessageRecord extends ReflectedObject{
     public static final int EXTRA_STREAM_PTT_FLAG = 10001;
@@ -92,34 +95,37 @@ public class MessageRecord extends ReflectedObject{
     public static final String QUERY_OLD_TABLE_FIELDS = "_id, extraflag, frienduin, isread, issend, istroop, msg, NULL as msgData, msgId, msgseq, msgtype, selfuin, senderuin, shmsgseq, time, 0 as versionCode, NULL as longMsgIndex, NULL as longMsgId, NULL as longMsgCount, 1 as isValid, NULL as msgUid, NULL as vipBubbleID, 0 as uniseq, 0 as sendFailCode, NULL as extStr, 0 as extInt, 0 as extLong";
     public static final String[] QUERY_OLD_TABLE_FIELDS_ARRAY = new String[]{"_id", "extraflag", "frienduin", "isread", "issend", "istroop", "msg", "msgId", "msgseq", "msgtype", "selfuin", "senderuin", "shmsgseq", "time"};
     public static final int SEND_FAIL_CODE_DEFAULT = 0;
-    private int extInt;
-    private int extLong;
-    private String extStr;
-    private int extraflag;
-    private String frienduin;
-    private boolean isValid = true;
-    private boolean isread;
-    private int issend;
-    private int istroop;
-    private int longMsgCount;
-    private int longMsgId;
-    private int longMsgIndex;
 
-    private String msg;
-    private byte[] msgData;
+    protected int extInt = -1;
+    protected int extLong = -1;
+    protected String extStr = null;
+    protected int extraflag = -1;
+    protected String frienduin = null;
+    protected boolean isValid = true;
+    protected boolean isread = false;
+    protected int issend = -1;
+    protected int istroop = -1;
+    protected int longMsgCount = -1;
+    protected int longMsgId = -1;
+    protected int longMsgIndex = -1;
 
-    private long msgId;
-    private long msgUid;
-    private long msgseq;
-    private int msgtype;
-    private String selfuin;
-    private int sendFailCode;
-    private String senderuin;
-    private long shmsgseq;
-    private long time;
-    private long uniseq;
-    private int versionCode = 3;
-    private long vipBubbleID;
+    protected String msg = null;
+    protected byte[] msgData = null;
+
+    protected long msgId = -1;
+    protected long msgUid = -1;
+    protected long msgseq = -1;
+    protected int msgtype = -1;
+    protected String selfuin=null;
+    protected int sendFailCode = -1;
+    protected String senderuin=null;
+    protected long shmsgseq = -1;
+    protected long time = -1;
+    protected long uniseq = -1;
+    protected int versionCode = 3;
+    protected long vipBubbleID = -1;
+
+    public MessageRecord() {}
 
     public MessageRecord(Object obj) {
         super(obj);
@@ -137,7 +143,7 @@ public class MessageRecord extends ReflectedObject{
 
     public String getExtStr() {
         if (!StringUtils.isEmpty(extStr))return extStr;
-        return extStr = (String)getField("extStr");
+        return extStr = getStringField("extStr");
     }
 
     public int getExtraflag() {
@@ -147,7 +153,7 @@ public class MessageRecord extends ReflectedObject{
 
     public String getFrienduin() {
         if (!StringUtils.isEmpty(frienduin))return frienduin;
-        return frienduin = (String)getField("frienduin");
+        return frienduin = getStringField("frienduin");
     }
 
     public boolean isValid() {
@@ -194,7 +200,7 @@ public class MessageRecord extends ReflectedObject{
 
     public String getMsg() {
         if (!StringUtils.isEmpty(msg))return msg;
-        return msg = (String)getField("msg");
+        return msg = getStringField("msg");
     }
 
     public byte[] getMsgData() {
@@ -224,7 +230,7 @@ public class MessageRecord extends ReflectedObject{
 
     public String getSelfuin() {
         if (!StringUtils.isEmpty(selfuin))return selfuin;
-        return selfuin = (String)getField("selfuin");
+        return selfuin = getStringField("selfuin");
     }
 
     public int getSendFailCode() {
@@ -234,7 +240,7 @@ public class MessageRecord extends ReflectedObject{
 
     public String getSenderuin() {
         if (!StringUtils.isEmpty(senderuin))return senderuin;
-        return senderuin = (String)getField("senderuin");
+        return senderuin = getStringField("senderuin");
     }
 
     public long getShmsgseq() {
@@ -262,9 +268,115 @@ public class MessageRecord extends ReflectedObject{
         return vipBubbleID = getLongField("vipBubbleID");
     }
 
+
+
+    public void setExtInt(int extInt) {
+        this.extInt = extInt;
+    }
+
+    public void setExtLong(int extLong) {
+        this.extLong = extLong;
+    }
+
+    public void setExtStr(String extStr) {
+        this.extStr = extStr;
+    }
+
+    public void setExtraflag(int extraflag) {
+        this.extraflag = extraflag;
+    }
+
+    public void setFrienduin(String frienduin) {
+        this.frienduin = frienduin;
+    }
+
+    public void setValid(boolean valid) {
+        isValid = valid;
+    }
+
+    public void setIsread(boolean isread) {
+        this.isread = isread;
+    }
+
+    public void setIssend(int issend) {
+        this.issend = issend;
+    }
+
+    public void setIstroop(int istroop) {
+        this.istroop = istroop;
+    }
+
+    public void setLongMsgCount(int longMsgCount) {
+        this.longMsgCount = longMsgCount;
+    }
+
+    public void setLongMsgId(int longMsgId) {
+        this.longMsgId = longMsgId;
+    }
+
+    public void setLongMsgIndex(int longMsgIndex) {
+        this.longMsgIndex = longMsgIndex;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public void setMsgData(byte[] msgData) {
+        this.msgData = msgData;
+    }
+
+    public void setMsgId(long msgId) {
+        this.msgId = msgId;
+    }
+
+    public void setMsgUid(long msgUid) {
+        this.msgUid = msgUid;
+    }
+
+    public void setMsgseq(long msgseq) {
+        this.msgseq = msgseq;
+    }
+
+    public void setMsgtype(int msgtype) {
+        this.msgtype = msgtype;
+    }
+
+    public void setSelfuin(String selfuin) {
+        this.selfuin = selfuin;
+    }
+
+    public void setSendFailCode(int sendFailCode) {
+        this.sendFailCode = sendFailCode;
+    }
+
+    public void setSenderuin(String senderuin) {
+        this.senderuin = senderuin;
+    }
+
+    public void setShmsgseq(long shmsgseq) {
+        this.shmsgseq = shmsgseq;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public void setUniseq(long uniseq) {
+        this.uniseq = uniseq;
+    }
+
+    public void setVersionCode(int versionCode) {
+        this.versionCode = versionCode;
+    }
+
+    public void setVipBubbleID(long vipBubbleID) {
+        this.vipBubbleID = vipBubbleID;
+    }
+
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("--Dump MessageRecord--,")
+        StringBuilder stringBuilder = new StringBuilder("--Dump MessageRecord--")
                 .append(",selfUin:").append(getSelfuin())
                 .append(",friendUin:").append(getFrienduin())
                 .append(",senderUin:").append(getSenderuin())
@@ -285,6 +397,88 @@ public class MessageRecord extends ReflectedObject{
                     .append(",longMsgCount:").append(getLongMsgCount())
                     .append(",longMsgIndex:").append(getLongMsgIndex());
         }
-        return stringBuilder.append(super.toString()).toString();
+        return stringBuilder.append(",").append(super.toString()).toString();
     }
+
+    @Override
+    public int describeContents() {
+        return super.describeContents();
+    }
+
+    public MessageRecord(Parcel in) {
+        super(in);
+        extInt = in.readInt();
+        extLong = in.readInt();
+        extStr = in.readString();
+        extraflag = in.readInt();
+        frienduin = in.readString();
+        isValid = in.readByte() != 0;
+        isread = in.readByte() != 0;
+        issend = in.readInt();
+        istroop = in.readInt();
+        longMsgCount = in.readInt();
+        longMsgId = in.readInt();
+        longMsgIndex = in.readInt();
+
+        msg = in.readString();
+        //in.readByteArray(msgData);
+
+        msgId = in.readLong();
+        msgUid = in.readLong();
+        msgseq = in.readLong();
+        msgtype = in.readInt();
+        selfuin = in.readString();
+        sendFailCode = in.readInt();
+        senderuin = in.readString();
+        shmsgseq = in.readLong();
+        time = in.readLong();
+        uniseq = in.readLong();
+        versionCode = in.readInt();
+        vipBubbleID = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeInt(getExtInt());
+        dest.writeLong(getExtLong());
+        dest.writeString(getExtStr());
+        dest.writeInt(getExtraflag());
+        dest.writeString(getFrienduin());
+        dest.writeByte((byte)(isValid()?1:0));
+        dest.writeByte((byte)(isread()?1:0));
+        dest.writeInt(getIssend());
+        dest.writeInt(getIstroop());
+        dest.writeInt(getLongMsgCount());
+        dest.writeInt(getLongMsgId());
+        dest.writeInt(getLongMsgIndex());
+
+        dest.writeString(getMsg());
+        //dest.writeByteArray(getMsgData());
+
+        dest.writeLong(getMsgId());
+        dest.writeLong(getMsgUid());
+        dest.writeLong(getMsgseq());
+        dest.writeInt(getMsgtype());
+        dest.writeString(getSelfuin());
+        dest.writeInt(getSendFailCode());
+        dest.writeString(getSenderuin());
+        dest.writeLong(getShmsgseq());
+        dest.writeLong(getTime());
+        dest.writeLong(getUniseq());
+        dest.writeInt(getVersionCode());
+        dest.writeLong(getVipBubbleID());
+    }
+
+    public static final Parcelable.Creator<MessageRecord> CREATOR = new Creator<MessageRecord>() {
+        @Override
+        public MessageRecord createFromParcel(Parcel source) {
+            return new MessageRecord(source);
+        }
+
+        @Override
+        public MessageRecord[] newArray(int size) {
+            return new MessageRecord[size];
+        }
+    };
 }

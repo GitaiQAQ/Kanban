@@ -1,29 +1,37 @@
 package me.gitai.phuckqq.data;
 
-import me.gitai.phuckqq.util.StringUtils;
+import android.os.Parcel;
 
+import me.gitai.library.utils.StringUtils;
+
+import android.os.Parcelable;
+import android.os.Parcel;
 /**
- * Created by dphdjy on 16-3-2.
+ * Created by gitai on 16-3-2.
  */
 //com.tencent.mobileqq.app.message.QQMessageFacade$Message
 public class Message extends MessageRecord{
-    private String actMsgContentValue;
-    private String action = null;
-    private int bizType = -1;
-    private int counter = 0;
-    private CharSequence emoRecentMsg;
-    private long fileSize = -1;
-    private int fileType = -1;
-    private boolean hasReply;
+    protected String actMsgContentValue = null;
+    protected String action = null;
+    protected int bizType = -1;
+    protected int counter = -1; //unread message count
+    protected String emoRecentMsg = null;
+    protected long fileSize = -1;
+    protected int fileType = -1;
+    protected boolean hasReply = false;
 
-    private boolean isCacheValid = true;
-    //private Boolean isInWhisper = false;
-    private String latestNormalMsgString;
-    private String nickName = null;
-    private String pttUrl;
-    private long shareAppID;
+    protected boolean isCacheValid = true;
+    protected boolean isInWhisper = false;
+    protected String latestNormalMsgString = null;
+    protected String nickName = null;
+    protected String pttUrl = null;
+    protected long shareAppID = -1;
 
-    private int unReadNum;
+    protected int unReadNum = -1;
+
+    private String summary = null;
+
+    public Message() {}
 
     public Message(Object obj) {
         super(obj);
@@ -38,12 +46,12 @@ public class Message extends MessageRecord{
 
     public String getActMsgContentValue() {
         if (!StringUtils.isEmpty(actMsgContentValue))return actMsgContentValue;
-        return actMsgContentValue = (String)getField("actMsgContentValue");
+        return actMsgContentValue = getStringField("actMsgContentValue");
     }
 
     public String getAction() {
         if (!StringUtils.isEmpty(action))return action;
-        return action = (String)getField("action");
+        return action = getStringField("action");
     }
 
     public int getBizType() {
@@ -56,9 +64,10 @@ public class Message extends MessageRecord{
         return counter = getIntField("counter");
     }
 
-    public CharSequence getEmoRecentMsg() {
-        if (!StringUtils.isEmpty(emoRecentMsg))return emoRecentMsg;
-        return emoRecentMsg = (CharSequence)getField("emoRecentMsg");
+    public String getEmoRecentMsg() {
+        /*if (!StringUtils.isEmpty(emoRecentMsg))return emoRecentMsg;
+        return emoRecentMsg = getStringField("emoRecentMsg");*/
+        return null;
     }
 
     public long getFileSize() {
@@ -81,24 +90,24 @@ public class Message extends MessageRecord{
         return isCacheValid = getBooleanField("isCacheValid");
     }
 
-    /*public Boolean getIsInWhisper() {
+    public boolean isInWhisper() {
         if (isInWhisper)return isInWhisper;
-        return isInWhisper = getBooleanField("isInWhisper");
-    }*/
+        return isInWhisper = (getField("isInWhisper") == null)?false:(Boolean)getField("isInWhisper");
+    }
 
     public String getLatestNormalMsgString() {
         if (!StringUtils.isEmpty(latestNormalMsgString))return latestNormalMsgString;
-        return latestNormalMsgString = (String)getField("latestNormalMsgString");
+        return latestNormalMsgString = getStringField("latestNormalMsgString");
     }
 
     public String getNickName() {
         if (!StringUtils.isEmpty(nickName))return nickName;
-        return nickName = (String)getField("nickName");
+        return nickName = getStringField("nickName");
     }
 
     public String getPttUrl() {
         if (!StringUtils.isEmpty(pttUrl))return pttUrl;
-        return pttUrl = (String)getField("pttUrl");
+        return pttUrl = getStringField("pttUrl");
     }
 
     public long getShareAppID() {
@@ -109,6 +118,71 @@ public class Message extends MessageRecord{
     public int getUnReadNum() {
         if (unReadNum > 0)return unReadNum;
         return unReadNum = getIntField("unReadNum");
+    }
+
+    public void setActMsgContentValue(String actMsgContentValue) {
+        this.actMsgContentValue = actMsgContentValue;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public void setBizType(int bizType) {
+        this.bizType = bizType;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public void setEmoRecentMsg(String emoRecentMsg) {
+        this.emoRecentMsg = emoRecentMsg;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public void setFileType(int fileType) {
+        this.fileType = fileType;
+    }
+
+    public void setHasReply(boolean hasReply) {
+        this.hasReply = hasReply;
+    }
+
+    public void setCacheValid(boolean cacheValid) {
+        isCacheValid = cacheValid;
+    }
+
+    public void setInWhisper(boolean inWhisper) {
+        isInWhisper = inWhisper;
+    }
+
+    public void setLatestNormalMsgString(String latestNormalMsgString) {
+        this.latestNormalMsgString = latestNormalMsgString;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public void setPttUrl(String pttUrl) {
+        this.pttUrl = pttUrl;
+    }
+
+    public void setShareAppID(long shareAppID) {
+        this.shareAppID = shareAppID;
+    }
+
+    public void setUnReadNum(int unReadNum) {
+        this.unReadNum = unReadNum;
+    }
+
+    public String getSummary(){
+        if (!StringUtils.isEmpty(summary)) return summary;
+        return summary = ((nickName!=null&&nickName.length()<=8)?nickName:(nickName!=null?(nickName.substring(0, 6) + "..."):senderuin)) + ":" + getMessageText();
     }
 
     @Override
@@ -123,14 +197,73 @@ public class Message extends MessageRecord{
                 .append(",fileType:").append(getFileType())
                 .append(",hasReply:").append(isHasReply())
                 .append(",isCacheValid:").append(isCacheValid())
-                //.append(",isInWhisper:").append(getIsInWhisper())
+                .append(",isInWhisper:").append(isInWhisper())
                 .append(",latestNormalMsgString:").append(getLatestNormalMsgString())
                 .append(",nickName:").append(getNickName())
                 .append(",pttUrl:").append(getPttUrl())
                 .append(",shareAppID:").append(getShareAppID())
                 .append(",unReadNum:").append(getUnReadNum())
-                .append(super.toString())
+                .append(",").append(super.toString())
                 .toString();
     }
 
+    @Override
+    public int describeContents() {
+        return super.describeContents();
+    }
+
+    public Message(Parcel in) {
+        super(in);
+        actMsgContentValue = in.readString();
+        action = in.readString();
+        bizType = in.readInt();
+        counter = in.readInt();
+        //emoRecentMsg = in.readString();
+        fileSize = in.readLong();
+        fileType = in.readInt();
+        hasReply = in.readByte() != 0;
+
+        isCacheValid = in.readByte() != 0;
+        isInWhisper = in.readByte() != 0;
+        latestNormalMsgString = in.readString();
+        nickName = in.readString();
+        pttUrl = in.readString();
+        shareAppID = in.readLong();
+
+        unReadNum = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(getActMsgContentValue());
+        dest.writeString(getAction());
+        dest.writeInt(getBizType());
+        dest.writeInt(getCounter());
+        //dest.writeString(getEmoRecentMsg());
+        dest.writeLong(getFileSize());
+        dest.writeInt(getFileType());
+        dest.writeByte((byte)(isHasReply()?1:0));
+
+        dest.writeByte((byte)(isCacheValid()?1:0));
+        dest.writeByte((byte)(isInWhisper()?1:0));
+        dest.writeString(getLatestNormalMsgString());
+        dest.writeString(getNickName());
+        dest.writeString(getPttUrl());
+        dest.writeLong(getShareAppID());
+
+        dest.writeInt(getUnReadNum());
+    }
+
+    public static final Parcelable.Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
+        public Message createFromParcel(Parcel source) {
+            return new Message(source);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
 }
