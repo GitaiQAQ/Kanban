@@ -29,6 +29,9 @@
                 <action android:name="me.gitai.phuckqq.message.reveiver"/>
             </intent-filter>
         </receiver>
+        <service android:name=".service.QQMessageService">
+
+        </service>
     </application>
 
 </manifest>

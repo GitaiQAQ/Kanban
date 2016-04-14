@@ -2,8 +2,13 @@ package me.gitai.phuckqq.xposed;
 
 import android.app.AndroidAppHelper;
 import android.app.Application;
+import android.app.Notification;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -14,12 +19,14 @@ import java.util.List;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import me.gitai.library.utils.L;
 import me.gitai.library.utils.StringUtils;
 import me.gitai.phuckqq.Constant;
 import me.gitai.phuckqq.data.Message;
+import me.gitai.phuckqq.service.QQMessageService;
 
 /**
  * Created by gitai on 16-2-29.
@@ -31,42 +38,93 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
 
     private ArrayList<Message> mMessages = new ArrayList();
 
+    private Application baseApplication;
 
-    private void init(XC_LoadPackage.LoadPackageParam lpparam) throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
-        if(QQAppInterface == null){
-            QQAppInterface = lpparam.classLoader.loadClass("com.tencent.mobileqq.app.QQAppInterface");
+    private Object friendManager;
+
+    private QQMessageService localQQMessageService;
+
+    private String packageName;
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            localQQMessageService = ((QQMessageService.LocalBinder)service).getService();
         }
 
-        if(MobileQQ == null){
-            MobileQQ = lpparam.classLoader.loadClass("mqq.app.MobileQQ");
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            localQQMessageService = null;
         }
+    };
 
-        if(SessionInfo == null){
-            SessionInfo = lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
-        }
+    private void initStaticClass(XC_LoadPackage.LoadPackageParam lpparam)
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
 
-        if(QQMessageFacade == null){
-            QQMessageFacade = lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade");
-        }
+        QQAppInterface = (QQAppInterface != null)?
+                QQAppInterface:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.QQAppInterface");
 
-        if(QQMessageFacadeMessage == null){
-            QQMessageFacadeMessage = lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade$Message");
-        }
+        MobileQQ = (MobileQQ != null)?
+                MobileQQ:lpparam.classLoader.loadClass("mqq.app.MobileQQ");
 
-        if(ContactUtils == null){
-            ContactUtils = lpparam.classLoader.loadClass("com.tencent.mobileqq.utils.ContactUtils");
-        }
+        SessionInfo = (SessionInfo != null)?
+                SessionInfo:lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
 
-        if(FriendManager == null){
-            FriendManager = lpparam.classLoader.loadClass("com.tencent.mobileqq.model.FriendManager");
-        }
+        QQMessageFacade = (QQMessageFacade != null)?
+                QQMessageFacade:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade");
+
+        QQMessageFacadeMessage = (QQMessageFacadeMessage != null)?
+                QQMessageFacadeMessage:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade$Message");
+
+        ContactUtils = (ContactUtils != null)?
+                ContactUtils:lpparam.classLoader.loadClass("com.tencent.mobileqq.utils.ContactUtils");
+
+        FriendManager = (FriendManager != null)?
+                FriendManager:lpparam.classLoader.loadClass("com.tencent.mobileqq.model.FriendManager");
+
+        ChatActivityFacade = (ChatActivityFacade != null)?
+                ChatActivityFacade:lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade");
     }
 
-    private void hook3(XC_LoadPackage.LoadPackageParam lpparam) throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+    private void initField()
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+
+        QQMessageFacadeField = (QQMessageFacadeField != null)?
+                QQMessageFacadeField: XposedHelpers.findFirstFieldByExactType(QQAppInterface, QQMessageFacade);
+
+        ListField = (ListField != null)?
+                ListField: XposedHelpers.findFirstFieldByExactType(QQMessageFacade, List.class);
+
+        /*if (QQMessageFacadeField == null || ListField == null){
+            Class clz = QQAppInterface;
+            do {
+                Field[] fields;
+                int fieldCount = (fields = QQAppInterface.getDeclaredFields()).length;
+                for (int i = 0; i < fieldCount; ++i) {
+                    Class type = fields[i].getType();
+                    L.d("Field Name: "  + fields[i].getName() + ", Type: " + fields[i].getType().getName());
+                    if (type.equals(QQMessageFacade) && QQMessageFacadeField == null){
+                        fields[i].setAccessible(true);
+                        QQMessageFacadeField = fields[i];
+                        L.d("QQMessageFacadeField");
+                    }else if(type.equals(List.class) && ListField == null){
+                        fields[i].setAccessible(true);
+                        ListField = fields[i];
+                        L.d("ListField");
+                    }else if(QQMessageFacadeField != null && ListField != null){
+                        L.d("break");
+                        break;
+                    }
+                }
+            } while((clz = clz.getSuperclass()) != null);
+        }*/
+    }
+
+    private void hookQQMessagehandler(XC_LoadPackage.LoadPackageParam lpparam)
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+
         String className = "com.tencent.mobileqq.app.QQAppInterface";
         String methodName = "a";
-
-        init(lpparam);
 
         L.d("Hooking a(QQMessageFacade$Message message, boolean needTicker)");
         XposedHelpers.findAndHookMethod(className, lpparam.classLoader, methodName,
@@ -74,65 +132,23 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
             new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    L.d("hook3->beforeHookedMethod");
                     Message currentMessage = new Message(param.args[0]);
                     boolean needTicker = (boolean)param.args[1];
+
+                    initField();
 
                     mMessages.add(currentMessage);
 
                     L.d(currentMessage.toString().replace(",", "\n") +"\nneedTicker:" + needTicker +"\n");
 
-                    QQMessageFacadeField = (QQMessageFacadeField != null)?QQMessageFacadeField:findFieldbyType(QQAppInterface, QQMessageFacade);
                     Object qQMessageFacade = QQMessageFacadeField.get(param.thisObject);
-
-                    /*try {//不知道有什么用，始终为空
-                        ConcurrentHashMapField = (ConcurrentHashMapField != null)?ConcurrentHashMapField:findFieldbyType(QQMessageFacade, ConcurrentHashMap.class);
-                        ConcurrentHashMap conCurrentHashMap = (ConcurrentHashMap)ConcurrentHashMapField.get(qQMessageFacade);
-
-                        L.d("ConcurrentHashMapSize: " + conCurrentHashMap.size());
-                    }catch (Throwable e) {
-                        L.e(e);
-                    }*/
-
-                    /*try {//不知道有什么用，始终为空
-                        AtomicIntegerField = (AtomicIntegerField != null)?AtomicIntegerField:findFieldbyType(QQMessageFacade, AtomicInteger.class);
-                        AtomicInteger atomicInteger = (AtomicInteger)AtomicIntegerField.get(qQMessageFacade);
-
-                        L.d("AtomicInteger:  " + atomicInteger.toString());
-                    }catch (Throwable e) {
-                        L.e(e);
-                    }*/
-
-                    /*try {//checkMsgCounts key<string>(tableName):value<int>(count)
-                        HashMapField = (HashMapField != null)?HashMapField:findFieldbyType(QQMessageFacade, HashMap.class);
-                        HashMap hashMap = (HashMap)HashMapField.get(qQMessageFacade);
-
-                        L.d("HashMapSize: " + hashMap.size());
-                    }catch (Throwable e) {
-                        L.e(e);
-                    }*/
-
-                    /*try {//key<string>(senderuin):value<QQMessageFacade$Message>(Message) 每个会话最后一条消息
-                        MapField = (MapField != null)?MapField:findFieldbyType(QQMessageFacade, Map.class);
-                        Map map = (Map)MapField.get(qQMessageFacade);
-                        Iterator itr = map.keySet().iterator();
-                        while(itr.hasNext()){
-                            String key = (String)itr.next();
-                            new Message(map.get(key));
-                        }
-                    }catch (Throwable e) {
-                        L.e(e);
-                    }*/
 
                     int contactCount = 0;
                     int unreadCount = 0;
 
                     try {
-                        ListField = (ListField != null)?ListField:findFieldbyType(QQMessageFacade, List.class);
                         List list = (List)ListField.get(qQMessageFacade);
-
                         contactCount = list.size();//contact Count
-
                         Iterator iterator = list.iterator();
                         while (iterator.hasNext()) {
                             unreadCount += new Message(iterator.next()).getCounter();//message Count
@@ -147,22 +163,34 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
                     for (int i = beginPos; i < mMessages.size(); i++) {//从 unreadCount 开始枚举
                         Message tmpMessage = mMessages.get(i);
                         if(StringUtils.isEmpty(tmpMessage.getNickName())){
-                            tmpMessage.setNickName(getNickName(param.thisObject, tmpMessage.getSelfuin(), tmpMessage.getSenderuin(), tmpMessage.getFrienduin()));
+                            tmpMessage.setNickName(
+                                    getNickName(param.thisObject,
+                                            tmpMessage.getSelfuin(),
+                                            tmpMessage.getSenderuin(),
+                                            tmpMessage.getFrienduin()));
                         }
                         tmpMessages.add(tmpMessage);//填入新数组
                     }
                     mMessages = tmpMessages;
 
                     if (StringUtils.isEmpty(currentMessage.getNickName())) {
-                        currentMessage.setNickName(getNickName(param.thisObject, currentMessage.getSelfuin(), currentMessage.getSenderuin(), currentMessage.getFrienduin()));
+                        currentMessage.setNickName(
+                                getNickName(param.thisObject,
+                                        currentMessage.getSelfuin(),
+                                        currentMessage.getSenderuin(),
+                                        currentMessage.getFrienduin()));
                     }
 
                     try {
-                        Application baseApplication = (Application)XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        baseApplication = (baseApplication != null)?
+                                baseApplication:(Application)XposedHelpers.getObjectField(param.thisObject, "mContext");
+
+                        //baseApplication.bindService(new Intent(QQMessageService.class.getName()), mServiceConnection, Context.BIND_AUTO_CREATE);
 
                         Intent intent =new Intent(Constant.ACTION_RECEIVER);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         Bundle bundle = new Bundle();
+                        bundle.putString(Constant.KEY_PACKAGENAME, packageName);
                         bundle.putInt(Constant.KEY_CONTACTS_COUNT, contactCount);
                         bundle.putInt(Constant.KEY_UNREADS_COUNT, unreadCount);
                         bundle.putBoolean(Constant.KEY_NEEDTICKER, needTicker);
@@ -178,13 +206,26 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
             });
     }
 
-    private Object friendManager;
+
+    private void hookNotification(XC_LoadPackage.LoadPackageParam lpparam)
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+        String className = "android.app.NotificationManager"; //类名
+        String methodName = "notify";  //方法名
+
+        L.d("Hooking notify(int id, Notification notification)");
+        XposedHelpers.findAndHookMethod(className, lpparam.classLoader, methodName,
+                int.class, Notification.class,
+                new XC_MethodReplacement() { //替换
+                    @Override
+                    protected Object replaceHookedMethod(MethodHookParam param) throws Throwable {
+                        L.d("notify()");
+                        return null;
+                    }
+                });
+    }
 
     private String getNickName(Object appRuntime, String selfuin, String senderuin, String frienduin){
         if (selfuin.equals(senderuin)) return "\u6211";
-        /*Object friendManager = XposedHelpers.callMethod(appRuntime, "getManager",
-                new Class<?>[]{int.class},8);
-        L.d("friendManager: " + friendManager.getClass().getName());*/
         try{
             if (friendManager == null) {
                 HashMap managers = (HashMap)XposedHelpers.getObjectField(appRuntime, "managers");
@@ -211,16 +252,6 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         }
     }
 
-    private Field findFieldbyType(Class<?> thisClass, Class<?> targetClass) {
-        Field[] fields = thisClass.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getType().equals(targetClass)){
-                return fields[i];
-            }
-        }
-        return null;
-    }
-
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         Application qQApplication = AndroidAppHelper.currentApplication();
@@ -229,11 +260,18 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         L.setLogToFileEnable(true, qQApplication, Constant.PATH_DATA_LOG);
         L.setXposedMode(true);
 
-        if (lpparam.packageName.startsWith("com.tencent.qq")) {
+        if ((packageName = lpparam.packageName).equals("com.tencent.qq.kddi") /*startsWith("com.tencent.qq")*/) {
+            initStaticClass(lpparam);
             try {
-                hook3(lpparam);
+                hookQQMessagehandler(lpparam);
             } catch (Throwable e) {
-                L.d("Failed to hook3 QQ handler" + "\n" + Log.getStackTraceString(e));
+                L.d("Failed to Hook QQMessagehandler" + "\n" + Log.getStackTraceString(e));
+                throw e;
+            }
+            try {
+                hookNotification(lpparam);
+            } catch (Throwable e) {
+                L.d("Failed to Hook Notification" + "\n" + Log.getStackTraceString(e));
                 throw e;
             }
         }

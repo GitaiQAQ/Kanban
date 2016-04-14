@@ -23,6 +23,7 @@ public class Constant {
 
     public static final String ACTION_RECEIVER              = "me.gitai.phuckqq.message.reveiver";
 
+    public static final String KEY_PACKAGENAME             = ACTION_RECEIVER + ".packageName";
     public static final String KEY_CONTACTS_COUNT          = ACTION_RECEIVER + ".contacts.count";
     public static final String KEY_UNREADS_COUNT           = ACTION_RECEIVER + ".unread.count";
     public static final String KEY_NEEDTICKER              = ACTION_RECEIVER + ".needTicker";

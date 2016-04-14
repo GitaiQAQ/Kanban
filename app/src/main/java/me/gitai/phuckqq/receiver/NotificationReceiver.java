@@ -54,7 +54,7 @@ public class NotificationReceiver extends BroadcastReceiver{
 
         if (parcelMessages == null) {
             parcelMessages = new ArrayList();
-            parcelMessages.add(currentMessage);
+            //parcelMessages.add(currentMessage);
         }
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
