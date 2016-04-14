@@ -1,65 +1,25 @@
 package me.gitai.phuckqq.xposed;
 
-import java.io.File;
+import android.app.AndroidAppHelper;
+import android.app.Application;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import android.annotation.TargetApi;
-import android.app.AndroidAppHelper;
-import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.UserHandle;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.List;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
-import me.gitai.phuckqq.BuildConfig;
-import me.gitai.phuckqq.Constant;
-import me.gitai.phuckqq.data.ServiceMsg;
-import me.gitai.phuckqq.data.Message;
-
 import me.gitai.library.utils.L;
-import me.gitai.library.utils.SharedPreferencesUtil;
 import me.gitai.library.utils.StringUtils;
-
-import com.qq.jce.wup.UniPacket;
-import com.qq.taf.jce.HexUtil;
-
-import java.io.UnsupportedEncodingException;
-
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import me.gitai.phuckqq.Constant;
+import me.gitai.phuckqq.data.Message;
 
 /**
  * Created by gitai on 16-2-29.
@@ -269,7 +229,7 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         L.setLogToFileEnable(true, qQApplication, Constant.PATH_DATA_LOG);
         L.setXposedMode(true);
 
-        if /*(lpparam.packageName.startsWith("com.tencent.qq"))*/("com.tencent.qq.kddi".equals(lpparam.packageName)) {
+        if (lpparam.packageName.startsWith("com.tencent.qq")) {
             try {
                 hook3(lpparam);
             } catch (Throwable e) {
