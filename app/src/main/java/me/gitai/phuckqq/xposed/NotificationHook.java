@@ -3,8 +3,6 @@ package me.gitai.phuckqq.xposed;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.support.v4.app.NotificationCompat;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 
 import me.gitai.library.utils.L;
 
@@ -13,31 +11,20 @@ import android.app.Application;
 import android.util.Log;
 
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.UserHandle;
 
 import me.gitai.phuckqq.BuildConfig;
 
 import android.content.Context;
 
-import android.graphics.Bitmap;
-
-import java.util.Iterator;
-
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
 import me.gitai.phuckqq.data.QQNotification;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 /**
  * Created by gitai on 16-4-10.

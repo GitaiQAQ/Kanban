@@ -5,7 +5,7 @@ import me.gitai.library.utils.StringUtils;
 /**
  * Created by gitai on 16-3-2.
  */
-public class SessionInfo extends ReflectedObject{
+public class QQSessionInfo extends ReflectedObject{
 	private String uin;	//a
 	private int uintype;	//a
 	private String phonenum;	//e
@@ -13,7 +13,7 @@ public class SessionInfo extends ReflectedObject{
 	private String uinname;	//d
 	private String troop_uin;	//b
 
-	public SessionInfo(Object obj) {
+	public QQSessionInfo(Object obj) {
         super(obj);
     }
 

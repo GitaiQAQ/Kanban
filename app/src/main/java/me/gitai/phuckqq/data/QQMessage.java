@@ -4,13 +4,11 @@ import android.os.Parcel;
 
 import me.gitai.library.utils.StringUtils;
 
-import android.os.Parcelable;
-import android.os.Parcel;
 /**
  * Created by gitai on 16-3-2.
  */
-//com.tencent.mobileqq.app.message.QQMessageFacade$Message
-public class Message extends MessageRecord{
+//com.tencent.mobileqq.app.message.QQMessageFacade$QQMessage
+public class QQMessage extends MessageRecord{
     protected String actMsgContentValue = null;
     protected String action = null;
     protected int bizType = -1;
@@ -31,9 +29,9 @@ public class Message extends MessageRecord{
 
     private String summary = null;
 
-    public Message() {}
+    public QQMessage() {}
 
-    public Message(Object obj) {
+    public QQMessage(Object obj) {
         super(obj);
     }
 
@@ -187,7 +185,7 @@ public class Message extends MessageRecord{
 
     @Override
     public String toString() {
-        return new StringBuilder("--Dump Message--")
+        return new StringBuilder("--Dump QQMessage--")
                 .append(",actMsgContentValue:").append(getActMsgContentValue())
                 .append(",action:").append(getAction())
                 .append(",bizType:").append(getBizType())
@@ -212,7 +210,7 @@ public class Message extends MessageRecord{
         return super.describeContents();
     }
 
-    public Message(Parcel in) {
+    public QQMessage(Parcel in) {
         super(in);
         actMsgContentValue = in.readString();
         action = in.readString();
@@ -255,15 +253,15 @@ public class Message extends MessageRecord{
         dest.writeInt(getUnReadNum());
     }
 
-    public static final Parcelable.Creator<Message> CREATOR = new Creator<Message>() {
+    public static final Creator<QQMessage> CREATOR = new Creator<QQMessage>() {
         @Override
-        public Message createFromParcel(Parcel source) {
-            return new Message(source);
+        public QQMessage createFromParcel(Parcel source) {
+            return new QQMessage(source);
         }
 
         @Override
-        public Message[] newArray(int size) {
-            return new Message[size];
+        public QQMessage[] newArray(int size) {
+            return new QQMessage[size];
         }
     };
 }

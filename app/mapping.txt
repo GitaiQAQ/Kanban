@@ -2,7 +2,7 @@ me.gitai.phuckqq.util.StringUtils -> me.gitai.a.a.a:
     char[] HEX_DIGITS -> a
     boolean isEmpty(java.lang.CharSequence) -> a
     void <clinit>() -> <clinit>
-me.gitai.phuckqq.data.Message -> me.gitai.phuckqq.a.a:
+me.gitai.phuckqq.data.QQMessage -> me.gitai.phuckqq.a.a:
     java.lang.String actMsgContentValue -> b
     java.lang.String action -> c
     int bizType -> d

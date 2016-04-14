@@ -1,7 +1,7 @@
 package me.gitai.phuckqq.data;
 
-import android.os.Parcelable;
 import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by gitai on 16-3-2.
@@ -141,7 +141,7 @@ public class ReflectedObject implements Parcelable{
     		dest.writeInt(getStatus());
     }
 
-    public static final Parcelable.Creator<ReflectedObject> CREATOR = new Creator<ReflectedObject>() {
+    public static final Creator<ReflectedObject> CREATOR = new Creator<ReflectedObject>() {
         @Override
         public ReflectedObject createFromParcel(Parcel source) {
             return new ReflectedObject(source);

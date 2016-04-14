@@ -1,8 +1,10 @@
 package me.gitai.phuckqq.data;
 
-import me.gitai.library.utils.StringUtils;
-import java.util.HashMap;
 import android.os.Bundle;
+
+import java.util.HashMap;
+
+import me.gitai.library.utils.StringUtils;
 
 /**
  * Created by gitai on 16-3-12.

@@ -11,20 +11,20 @@ import android.support.v4.app.NotificationCompat;
 
 import me.gitai.phuckqq.Constant;
 import android.graphics.BitmapFactory;
-import me.gitai.phuckqq.data.Message;
 
 import me.gitai.library.utils.L;
 import java.util.ArrayList;
 import me.gitai.phuckqq.R;
+import me.gitai.phuckqq.data.QQMessage;
 
 /**
  * Created by i@gitai.me on 16-4-12.
  */
 public class NotificationReceiver extends BroadcastReceiver{
-    private Message currentMessage;
+    private QQMessage currentQQMessage;
     private int contactCount,unreadCount;
     private boolean needTicker;
-    private ArrayList<Message> parcelMessages;
+    private ArrayList<QQMessage> parcelQQMessages;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -42,26 +42,26 @@ public class NotificationReceiver extends BroadcastReceiver{
 
         needTicker = bundle.getBoolean(Constant.KEY_NEEDTICKER, false);
 
-        currentMessage = (Message)bundle.getParcelable(Constant.KEY_CURRENT_MESSAGE);
+        currentQQMessage = (QQMessage)bundle.getParcelable(Constant.KEY_CURRENT_MESSAGE);
 
-        L.d(currentMessage.toString().replace(",", "\n"));
+        L.d(currentQQMessage.toString().replace(",", "\n"));
 
-        if (currentMessage == null) {
+        if (currentQQMessage == null) {
             return;
         }
 
-        parcelMessages = bundle.getParcelableArrayList(Constant.KEY_MESSAGES);
+        parcelQQMessages = bundle.getParcelableArrayList(Constant.KEY_MESSAGES);
 
-        if (parcelMessages == null) {
-            parcelMessages = new ArrayList();
-            //parcelMessages.add(currentMessage);
+        if (parcelQQMessages == null) {
+            parcelQQMessages = new ArrayList();
+            //parcelQQMessages.add(currentQQMessage);
         }
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(parcelMessages.size() + " new messages");
-        inboxStyle.setSummaryText(currentMessage.getSummary());
-        for (Message tmpMessage:parcelMessages) {
-            inboxStyle.addLine(tmpMessage.getSummary());
+        inboxStyle.setBigContentTitle(parcelQQMessages.size() + " new messages");
+        inboxStyle.setSummaryText(currentQQMessage.getSummary());
+        for (QQMessage tmpQQMessage : parcelQQMessages) {
+            inboxStyle.addLine(tmpQQMessage.getSummary());
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
             .setSmallIcon(R.drawable.ic_notify)
@@ -70,9 +70,9 @@ public class NotificationReceiver extends BroadcastReceiver{
             .setWhen(System.currentTimeMillis())
             //.setLargeIcon(largeIcon)
             .setAutoCancel(true)
-            .setContentTitle(parcelMessages.size() + " new messages")
-            .setContentText(currentMessage.getSummary())
-            .setContentInfo(""+parcelMessages.size())
+            .setContentTitle(parcelQQMessages.size() + " new messages")
+            .setContentText(currentQQMessage.getSummary())
+            .setContentInfo(""+ parcelQQMessages.size())
             .setTicker("New message")
             .setDefaults(Notification.DEFAULT_ALL)
             //.setContentIntent(mNotification.contentIntent)

@@ -1,15 +1,13 @@
 package me.gitai.phuckqq.data;
 
-import de.robv.android.xposed.XposedHelpers;
-import me.gitai.library.utils.StringUtils;
-
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
 import android.app.Notification;
-
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.content.Context;
+
+import me.gitai.library.utils.StringUtils;
 
 /**
  * Created by gitai on 16-4-11.

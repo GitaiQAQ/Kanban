@@ -1,35 +1,23 @@
 package me.gitai.phuckqq.xposed;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 
-import android.annotation.TargetApi;
 import android.app.AndroidAppHelper;
-import android.app.Application;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.UserHandle;
 import android.util.Log;
-import android.widget.Toast;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import me.gitai.phuckqq.BuildConfig;
-import me.gitai.phuckqq.Constant;
-import me.gitai.phuckqq.data.Message;
-import me.gitai.phuckqq.data.SessionInfo;
+import me.gitai.phuckqq.data.QQMessage;
+import me.gitai.phuckqq.data.QQSessionInfo;
 
 /**
  * Created by gitai on 16-2-29.
@@ -39,7 +27,7 @@ public class ChatHook implements IXposedHookLoadPackage {
     private HashMap<String, String> uins = new HashMap<>();
 
     private Object mRuntime = null;
-    private HashMap<String, SessionInfo> sessionInfos = new HashMap<>();
+    private HashMap<String, QQSessionInfo> sessionInfos = new HashMap<>();
 
     private Class<?> QQAppInterface,SessionInfo,ChatActivityFacade;
 
@@ -66,7 +54,7 @@ public class ChatHook implements IXposedHookLoadPackage {
                 new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        SessionInfo sessionInfo = new SessionInfo(param.args[0]);
+                        QQSessionInfo sessionInfo = new QQSessionInfo(param.args[0]);
                         //sessionInfos.put(uin, sessionInfos);
                         XposedBridge.log(sessionInfo.toString());
                     }
@@ -77,18 +65,18 @@ public class ChatHook implements IXposedHookLoadPackage {
         String className = "com.tencent.mobileqq.activity.ChatActivity";
         String methodName = "a";
 
-        Class<?> message = lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade$Message");
+        Class<?> message = lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade$QQMessage");
 
-        XposedBridge.log("Hooking a(QQMessageFacade$Message qQMessageFacade$Message)[1405]");
+        XposedBridge.log("Hooking a(QQMessageFacade$QQMessage qQMessageFacade$QQMessage)[1405]");
 
         XposedHelpers.findAndHookMethod(className, lpparam.classLoader, methodName,
                 message,
                 new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Message message = new Message(param.args[0]);
+                QQMessage QQMessage = new QQMessage(param.args[0]);
 
-                XposedBridge.log(message.toString());
+                XposedBridge.log(QQMessage.toString());
 
                 if (mContext == null) {
                     mContext = (Context)param.thisObject;
@@ -106,24 +94,24 @@ public class ChatHook implements IXposedHookLoadPackage {
                     mRuntime = XposedHelpers.getObjectField(mContext, "mRuntime");
                 }
 
-                SessionInfo sessionInfo = null;
-                if (!sessionInfos.containsKey(message.getSenderuin())){
+                QQSessionInfo sessionInfo = null;
+                if (!sessionInfos.containsKey(QQMessage.getSenderuin())){
                     Field[] fields = mContext.getClass().getDeclaredFields();
                     for (int i = 0; i < fields.length; i++) {
                         if (fields[i].getType().equals(SessionInfo)){
-                            sessionInfo = new SessionInfo(fields[i].get(mContext));
-                            sessionInfos.put(message.getSenderuin(), sessionInfo);
+                            sessionInfo = new QQSessionInfo(fields[i].get(mContext));
+                            sessionInfos.put(QQMessage.getSenderuin(), sessionInfo);
                         }
                     }
                 }else{
-                    sessionInfo = sessionInfos.get(message.getSenderuin());
+                    sessionInfo = sessionInfos.get(QQMessage.getSenderuin());
                 }
 
                 if(ChatActivityFacade == null){
                     ChatActivityFacade = lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade");
                 }
 
-                sendBySessionInfo(sessionInfo, message.toString().replace(",", "\n"));
+                sendBySessionInfo(sessionInfo, QQMessage.toString().replace(",", "\n"));
             }
         });
     }
@@ -174,7 +162,7 @@ public class ChatHook implements IXposedHookLoadPackage {
             sendBySessionInfo(sessionInfos.get(uin), message);
     }
 
-    private void sendBySessionInfo(SessionInfo sessionInfo, String message){
+    private void sendBySessionInfo(QQSessionInfo sessionInfo, String message){
         //if (!mConfig.getBoolean(Constant.KEY_SEND_ENABLE, false)) return;
         //if (!((String)mConfig.getConfig(Constant.KEY_RES_LIST, "")).contains(sessionInfo.getUin())) return;
         XposedHelpers.callStaticMethod(ChatActivityFacade, "a",

@@ -1,10 +1,9 @@
 package me.gitai.phuckqq.data;
 
 import android.os.Parcel;
+
 import me.gitai.library.utils.StringUtils;
 
-import android.os.Parcelable;
-import android.os.Parcel;
 /**
  * Created by gitai on 16-3-2.
  */
@@ -470,7 +469,7 @@ public class MessageRecord extends ReflectedObject{
         dest.writeLong(getVipBubbleID());
     }
 
-    public static final Parcelable.Creator<MessageRecord> CREATOR = new Creator<MessageRecord>() {
+    public static final Creator<MessageRecord> CREATOR = new Creator<MessageRecord>() {
         @Override
         public MessageRecord createFromParcel(Parcel source) {
             return new MessageRecord(source);

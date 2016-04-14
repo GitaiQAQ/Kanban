@@ -26,11 +26,13 @@
         </activity>
         <receiver android:name=".receiver.NotificationReceiver">
             <intent-filter>
-                <action android:name="me.gitai.phuckqq.message.reveiver"/>
+                <action android:name="me.gitai.phuckqq.QQMessage.reveiver"/>
             </intent-filter>
         </receiver>
         <service android:name=".service.QQMessageService">
-
+            <intent-filter>
+                <action android:name="me.gitai.phuckqq.service.QQMessageService" />
+            </intent-filter>
         </service>
     </application>
 

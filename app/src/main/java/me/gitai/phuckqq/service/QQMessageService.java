@@ -4,10 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import me.gitai.library.utils.L;
+import me.gitai.library.utils.StringUtils;
+import me.gitai.phuckqq.data.QQMessage;
 import me.gitai.phuckqq.xposed.IQQAidlInterface;
 
 /**
@@ -29,11 +32,13 @@ public class QQMessageService extends Service{
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        L.d();
-        if(IQQAidlInterface.class.getClass().getName().equals(intent.getAction())){
+        L.d(StringUtils.toString(intent));
+        return mBinder;
+        /*if(IQQAidlInterface.class.getName().equals(intent.getAction())){
             return mBinder;
         }
-        return null;
+        return null;*/
+
     }
 
     private IQQAidlInterface.Stub mBinder = new IQQAidlInterface.Stub(){
@@ -44,11 +49,11 @@ public class QQMessageService extends Service{
             L.d(uin + message);
             return false;
         }
-    };
 
-    public class LocalBinder extends Binder{
-        public QQMessageService getService(){
-            return QQMessageService.this;
+        @Override
+        public void onMessageReciver(QQMessage message) throws RemoteException {
+            L.d(message.toString());
+
         }
-    }
+    };
 }
