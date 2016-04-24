@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:preference="http://schemas.android.com/apk/res-auto"
+    android:persistent="true">
+    <PreferenceCategory android:title="@string/prefs_cats_general">
+        <SwitchPreference android:key="general_enable"
+            android:title="@string/prefs_enable"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_cats_about">
+        <Preference
+            android:key="about_help_feedback"
+            android:title="@string/prefs_app_feedback">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/kanban.danmu/">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_rate_app"
+            android:title="@string/prefs_app_rate">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=me.gitai.kanban.danmu">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_donate"
+            android:title="@string/prefs_app_donate"
+            android:summary="@string/prefs_app_donate_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/donate">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_app_version"
+            android:title="@string/prefs_app_version">
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

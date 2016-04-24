@@ -1,1 +1,1 @@
-include ':Xposed.Core', ':library', ':Kanban', ':Notification'
+include ':library', ':Kanban', ':Danmu', ':Xposed.Core', ':Notification'

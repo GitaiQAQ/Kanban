@@ -17,8 +17,10 @@ import java.util.List;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import me.gitai.kanban.core.BuildConfig;
 import me.gitai.library.utils.L;
 import me.gitai.library.utils.StringUtils;
 import me.gitai.kanban.Constant;
@@ -118,6 +120,8 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
     private void hookQQMessagehandler(XC_LoadPackage.LoadPackageParam lpparam)
             throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
 
+        if (!sp.getBoolean("prefs_task_hook",false)) return;
+
         String className = "com.tencent.mobileqq.app.QQAppInterface";
         String methodName = "a";
 
@@ -199,6 +203,7 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
                         L.e(e);
                     }*/
 
+                    if (!sp.getBoolean("prefs_task_broadcast",false)) return;
                     try {
                         baseApplication = (baseApplication != null)?
                                 baseApplication:(Application)XposedHelpers.getObjectField(param.thisObject, "mContext");
@@ -225,6 +230,8 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
 
     private void hookNotification(XC_LoadPackage.LoadPackageParam lpparam)
             throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+        if (!sp.getBoolean("prefs_intercept",false)) return;
+
         String className = "android.app.NotificationManager"; //类名
         String methodName = "notify";  //方法名
 
@@ -268,8 +275,13 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         }
     }
 
+    private XSharedPreferences sp;
+
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+        sp = new XSharedPreferences(BuildConfig.APPLICATION_ID);
+        if (!sp.getBoolean("general_enable", false)) return;
+
         Application qQApplication = AndroidAppHelper.currentApplication();
 
         L.setLogcatEnable(qQApplication, true);

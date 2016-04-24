@@ -4,4 +4,15 @@
 
     <string name="notification_title">New message</string>
     <string name="notification_title_over">%1$d new messages from %2$d contacts</string>
+
+    <!-- Preferences -->
+    <string name="prefs_cats_general">General</string>
+        <string name="prefs_enable">Enable</string>
+
+    <string name="prefs_cats_about">About</string>
+        <string name="prefs_app_version">Application version</string>
+        <string name="prefs_app_rate">Rate App</string>
+        <string name="prefs_app_feedback">Feedback</string>
+        <string name="prefs_app_donate">Donate</string>
+        <string name="prefs_app_donate_summary">Alipay: i@gitai.me ($1)</string>
 </resources>

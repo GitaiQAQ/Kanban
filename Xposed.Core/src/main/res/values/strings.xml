@@ -6,5 +6,27 @@
 
     <!-- Xposed -->
     <string name="intercept_xposed_summary" translatable="false">QQMessage hook to send Broadcast and receive callback to send.</string>
+
+    <!-- Preferences -->
+    <string name="prefs_cats_general">General</string>
+        <string name="prefs_enable">Enable</string>
+
+    <string name="prefs_cats_task">Task</string>
+        <string name="prefs_task_hook">Hook</string>
+        <string name="prefs_task_hook_summary">...</string>
+
+        <string name="prefs_task_broadcast">SendBroadcast</string>
+        <string name="prefs_task_broadcast_summary">...</string>
+
+        <string name="prefs_intercept">Intercept</string>
+        <string name="prefs_intercept_summary">Interception notification</string>
+
+    <string name="prefs_cats_about">About</string>
+        <string name="prefs_app_version">Application version</string>
+        <string name="prefs_app_rate">Rate App</string>
+        <string name="prefs_app_feedback">Feedback</string>
+        <string name="prefs_app_donate">Donate</string>
+        <string name="prefs_app_donate_summary">Alipay: i@gitai.me ($1)</string>
+
 </resources>
 

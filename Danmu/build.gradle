@@ -52,7 +52,7 @@ android {
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -70,7 +70,7 @@ android {
                         + defaultConfig.versionName
                         + ".apk")
 
-                output.outputFile = new File(outputFile.parent, fileName)
+                output.outputFile = new File("../apk/", fileName)
             }
         }
     }
@@ -95,5 +95,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
+    compile "com.github.ctiao:DanmakuFlameMaster:0.4.5"
     compile "com.android.support:support-v4:${versions.androidSupport}"
 }

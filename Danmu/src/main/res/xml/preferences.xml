@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:preference="http://schemas.android.com/apk/res-auto"
+    android:persistent="true">
+    <PreferenceCategory android:title="@string/prefs_cats_general">
+        <SwitchPreference android:key="general_enable"
+            android:title="@string/prefs_enable"
+            android:defaultValue="true"/>
+        <SwitchPreference android:key="general_debug"
+            android:dependency="general_enable"
+            android:title="@string/prefs_debug"
+            android:summary="@string/prefs_debug_summary"
+            android:defaultValue="true"/>
+        <Preference android:key="general_test"
+            android:title="@string/prefs_test"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_cats_style">
+        <EditTextPreference android:key="prefs_style_size"
+            android:dependency="general_enable"
+            android:title="@string/prefs_style_size"
+            android:summary="@string/prefs_style_size_summary"
+            android:defaultValue="24"/>
+        <EditTextPreference android:key="prefs_style_color"
+            android:dependency="general_enable"
+            android:title="@string/prefs_style_color"
+            android:summary="@string/prefs_style_color_summary"
+            android:defaultValue="fff"/>
+        <SwitchPreference android:key="prefs_style_shadow"
+            android:dependency="general_enable"
+            android:title="@string/prefs_style_shadow"
+            android:summary="@string/prefs_style_shadow_summary"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_cats_about">
+        <Preference
+            android:key="about_help_feedback"
+            android:title="@string/prefs_app_feedback">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/kanban.danmu/">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_rate_app"
+            android:title="@string/prefs_app_rate">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=me.gitai.kanban.danmu">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_donate"
+            android:title="@string/prefs_app_donate"
+            android:summary="@string/prefs_app_donate_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/donate">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_app_version"
+            android:title="@string/prefs_app_version">
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

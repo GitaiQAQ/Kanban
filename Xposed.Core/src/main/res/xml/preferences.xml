@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:preference="http://schemas.android.com/apk/res-auto"
+    android:persistent="true">
+    <PreferenceCategory android:title="@string/prefs_cats_general">
+        <SwitchPreference android:key="general_enable"
+            android:title="@string/prefs_enable"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_cats_task">
+        <SwitchPreference android:key="prefs_task_hook"
+            android:dependency="general_enable"
+            android:title="@string/prefs_task_hook"
+            android:summary="@string/prefs_task_hook_summary"
+            android:defaultValue="false"/>
+        <SwitchPreference android:key="prefs_task_broadcast"
+            android:dependency="prefs_task_hook"
+            android:title="@string/prefs_task_broadcast"
+            android:summary="@string/prefs_task_broadcast_summary"
+            android:defaultValue="false"/>
+        <SwitchPreference android:key="prefs_intercept"
+            android:dependency="general_enable"
+            android:title="@string/prefs_intercept"
+            android:summary="@string/prefs_intercept_summary"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/prefs_cats_about">
+        <Preference
+            android:key="about_help_feedback"
+            android:title="@string/prefs_app_feedback">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/kanban.core/">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_rate_app"
+            android:title="@string/prefs_app_rate">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=me.gitai.kanban.core">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_donate"
+            android:title="@string/prefs_app_donate"
+            android:summary="@string/prefs_app_donate_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://gitai.me/donate">
+            </intent>
+        </Preference>
+        <Preference
+            android:key="about_app_version"
+            android:title="@string/prefs_app_version">
+        </Preference>
+    </PreferenceCategory>
+</PreferenceScreen>

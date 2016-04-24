@@ -1,9 +1,10 @@
-package me.gitai.kanban.notification;
+package me.gitai.kanban.danmu;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.Process;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 import java.util.ArrayList;
@@ -12,10 +13,21 @@ import java.util.Random;
 import me.gitai.kanban.Constant;
 import me.gitai.kanban.data.QQMessage;
 
+import android.app.Application;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import me.gitai.library.utils.L;
+import me.gitai.library.utils.SharedPreferencesUtil;
+
+import android.os.IBinder;
 /**
  * Created by i@gitai.me on 16-4-23.
  */
-public class MainActivity extends PreferenceActivity{
+public class MainActivity extends PreferenceActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+    private DanmuService danmuService;
+    private Random random;
     private String[][] testMsgs = {
             {"阿库娅",
                 " 汝，迷茫的家里蹲啊。不要太过自责……",
@@ -87,28 +99,74 @@ public class MainActivity extends PreferenceActivity{
                 "但，为什么，会变成这样呢…"}
     };
 
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            // TODO Auto-generated method stub
+        }
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // TODO Auto-generated method stub
+            danmuService = ((DanmuService.DanmuBinder)service).getService();
+
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        L.d();
+        random = new Random();
+
+        if (SharedPreferencesUtil.getInstence(null).getBoolean("general_enable", false)){
+            Intent intent = new Intent(this, DanmuService.class);
+            bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+
+        findPreference("general_test").setOnPreferenceClickListener(this);
+        findPreference("general_enable").setOnPreferenceChangeListener(this);
+        findPreference("general_enable").setOnPreferenceChangeListener(this);
+
         findPreference("about_app_version").setSummary(
                 String.format("%s %s(%d)", BuildConfig.APPLICATION_ID, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
-        Random random = new Random();
-        QQMessage testMsg = new QQMessage();
-        String[] msg = testMsgs[random.nextInt(testMsgs.length)];
-        testMsg.setNickName(msg[0]);
-        testMsg.setMsg(msg[random.nextInt(msg.length - 1) + 1]);
+    }
 
-        Intent intent =new Intent(this, NotificationReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(Constant.KEY_PACKAGENAME, BuildConfig.APPLICATION_ID);
-        bundle.putInt(Constant.KEY_CONTACTS_COUNT, 3);
-        bundle.putInt(Constant.KEY_UNREADS_COUNT, 10);
-        bundle.putInt(Constant.KEY_APP_PID, Process.myPid());
-        bundle.putBoolean(Constant.KEY_NEEDTICKER, false);
-        bundle.putParcelable(Constant.KEY_CURRENT_MESSAGE, testMsg);
-        bundle.putParcelableArrayList(Constant.KEY_MESSAGES, null);
-        intent.putExtras(bundle);
-        sendBroadcast(intent);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(serviceConnection);
+    }
+
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        switch (preference.getKey()){
+            case "general_test":
+                String[] msg = testMsgs[random.nextInt(testMsgs.length)];
+                QQMessage testMsg = new QQMessage();
+                testMsg.setNickName(msg[0]);
+                testMsg.setMsg(msg[random.nextInt(msg.length - 1) + 1]);
+                danmuService.addDanmaku(testMsg);
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+        switch (preference.getKey()){
+            case "general_enable":
+                Intent intent = new Intent(this, DanmuService.class);
+                if ((Boolean) newValue){
+                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                }else{
+                    unbindService(serviceConnection);
+                    stopService(intent);
+                }
+            case "general_debug":
+                danmuService.showFPS((Boolean) newValue);
+        }
+        return false;
     }
 }

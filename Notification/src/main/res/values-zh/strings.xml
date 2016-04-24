@@ -5,4 +5,15 @@
 
     <string name="notification_title">新消息</string>
     <string name="notification_title_over">%1$d 条新消息来自 %2$d 个联系人</string>
+
+    <!-- Preferences -->
+    <string name="prefs_cats_general">全局</string>
+        <string name="prefs_enable">启用</string>
+
+    <string name="prefs_cats_about">关于</string>
+		<string name="prefs_app_version">版本</string>
+        <string name="prefs_app_rate">评价应用</string>
+        <string name="prefs_app_feedback">反馈</string>
+        <string name="prefs_app_donate">捐赠</string>
+        <string name="prefs_app_donate_summary">支付宝: i@gitai.me (￥1)</string>
 </resources>

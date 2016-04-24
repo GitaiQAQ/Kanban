@@ -16,9 +16,6 @@
 #   public *;
 #}
 
-
--dontwarn me.gitai.kanban.data.**
-
--dontwarn me.gitai.library.utils.L
+-keep public class me.gitai.kanban.data.**
 
 -printmapping mapping.txt

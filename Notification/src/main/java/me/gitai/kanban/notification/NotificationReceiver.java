@@ -15,6 +15,7 @@ import android.graphics.BitmapFactory;
 import me.gitai.library.utils.L;
 import java.util.ArrayList;
 import me.gitai.kanban.data.QQMessage;
+import me.gitai.library.utils.SharedPreferencesUtil;
 
 /**
  * Created by i@gitai.me on 16-4-12.
@@ -28,6 +29,8 @@ public class NotificationReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         L.d();
+
+        if (!SharedPreferencesUtil.getInstence(null).getBoolean("general_enable",false)) return;
 
         Bundle bundle = intent.getExtras();
         if (bundle == null){
@@ -62,7 +65,7 @@ public class NotificationReceiver extends BroadcastReceiver{
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         if (parcelQQMessages.size() > 1){
-            title = String.format(context.getString(R.string.notification_title_over) , contactCount, unreadCount);
+            title = String.format(context.getString(R.string.notification_title_over) , unreadCount, contactCount);
         }
         inboxStyle.setBigContentTitle(title);
         inboxStyle.setSummaryText(currentQQMessage.getSummary());
