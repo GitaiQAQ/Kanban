@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Kanban.Core</string>
+    <string name="title">Kanban v2</string>
+
+    <string name="clear" translatable="false">clear</string>
+
+    <!-- Xposed -->
+    <string name="intercept_xposed_summary" translatable="false">QQMessage hook to send Broadcast and receive callback to send.</string>
+</resources>
+

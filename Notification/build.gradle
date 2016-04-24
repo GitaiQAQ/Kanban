@@ -1,0 +1,99 @@
+import java.text.SimpleDateFormat
+
+apply plugin: 'com.android.application'
+
+apply from: '../buildscripts/utils.gradle'
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+
+    defaultConfig {
+        applicationId config.applicationId+".notification"
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        /*ndk {
+            moduleName "jni_module"
+            ldLibs "log"
+            abiFilters "armeabi"
+        }*/
+    }
+
+    signingConfigs {
+        release {
+            if (config.releaseSigning.storePassword != null) {
+                storeFile file(config.releaseSigning.storeFile)
+                storePassword config.releaseSigning.storePassword
+                keyAlias config.releaseSigning.alias
+                keyPassword config.releaseSigning.aliasPassword
+            }/*else{
+                storeFile file(System.console().readLine("\n\$ Enter keystore path: "))
+                storePassword System.console().readLine("\n\$ Enter keystore password: ")
+                keyAlias System.console().readLine("\n\$ Enter key alias: ")
+                keyPassword System.console().readLine("\n\$ Enter key password: ")
+            }*/
+        }
+    }
+
+    buildTypes {
+        debug {
+            jniDebuggable true
+            debuggable true
+
+            applicationIdSuffix = ".debug"
+            //versionNameSuffix "-${getBuildTime()}-${getCiBuildNumber()}"
+        }
+        release {
+            zipAlignEnabled true
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    /*applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                //def fileName = outputFile.name.replace("app",  config.applicationId)
+
+                def fileName = outputFile.name.replace(".apk", ""
+                        + "-c"
+                        + defaultConfig.versionCode
+                        + "-v"
+                        + defaultConfig.versionName
+                        + ".apk")
+
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }*/
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'LICENSE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'NOTICE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+}
+
+dependencies {
+    compile project(':library')
+    compile project(':Kanban')
+
+    provided fileTree(dir: 'deps', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+
+    compile "com.android.support:support-v4:${versions.androidSupport}"
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kanban.Notification</string>
+    <string name="title">Notification for QQ</string>
+
+    <string name="notification_title">新消息</string>
+    <string name="notification_title_over">%1$d 条新消息来自 %2$d 个联系人</string>
+</resources>

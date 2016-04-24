@@ -22,7 +22,7 @@ task clean(type: Delete) {
 subprojects {
     ext {
         config = [
-                applicationId : "me.gitai.phuckqq",
+                applicationId : "me.gitai.kanban.core",
 
                 compileSdkVersion : 23,
                 buildToolsVersion : "23.0.1",
@@ -36,8 +36,8 @@ subprojects {
                         aliasPassword: System.getenv("KEY_PASSWORD")
                 ],
 
-                versionCode : 1,
-                versionName : "0.0.1-beta"
+                versionCode : 18,
+                versionName : "2.0.1-beta"
         ]
 
         versions = [

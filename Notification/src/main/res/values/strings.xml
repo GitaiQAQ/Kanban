@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Kanban.Notification</string>
+    <string name="title">Notification for QQ</string>
+
+    <string name="notification_title">New message</string>
+    <string name="notification_title_over">%1$d new messages from %2$d contacts</string>
+</resources>
