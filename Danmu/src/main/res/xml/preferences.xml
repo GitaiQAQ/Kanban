@@ -15,11 +15,12 @@
             android:title="@string/prefs_test"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_cats_style">
-        <EditTextPreference android:key="prefs_style_size"
+        <ListPreference android:key="prefs_style_size"
             android:dependency="general_enable"
             android:title="@string/prefs_style_size"
             android:summary="@string/prefs_style_size_summary"
-            android:defaultValue="24"/>
+            android:entries="@array/style_size"
+            android:entryValues="@array/style_size"/>
         <EditTextPreference android:key="prefs_style_color"
             android:dependency="general_enable"
             android:title="@string/prefs_style_color"

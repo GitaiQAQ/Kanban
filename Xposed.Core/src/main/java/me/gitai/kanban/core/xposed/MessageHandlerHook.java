@@ -279,28 +279,34 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        sp = new XSharedPreferences(BuildConfig.APPLICATION_ID);
-        if (!sp.getBoolean("general_enable", false)) return;
-
         Application qQApplication = AndroidAppHelper.currentApplication();
 
         L.setLogcatEnable(qQApplication, true);
         L.setLogToFileEnable(true, qQApplication, Constant.PATH_DATA_LOG);
         L.setXposedMode(true);
 
-        if ((packageName = lpparam.packageName)./*equals("com.tencent.qq.kddi")*/startsWith("com.tencent.qq")) {
+        sp = new XSharedPreferences(BuildConfig.APPLICATION_ID);
+        if (!sp.getBoolean("general_enable", false)) {
+            L.d(BuildConfig.APPLICATION_ID);
+            L.d("Enable: " + "false");
+            return;
+        }
 
-            initStaticClass(lpparam);
-            try {
-                hookQQMessagehandler(lpparam);
-            } catch (Throwable e) {
-                L.d("Failed to Hook QQMessagehandler", Log.getStackTraceString(e));
-            }
-            try {
-                hookNotification(lpparam);
-            } catch (Throwable e) {
-                L.d("Failed to Hook Notification", Log.getStackTraceString(e));
-            }
+        if (!(packageName = lpparam.packageName)./*equals("com.tencent.qq.kddi")*/startsWith("com.tencent.qq")) {
+            L.d("packageName: " + packageName);
+            return;
+        }
+
+        initStaticClass(lpparam);
+        try {
+            hookQQMessagehandler(lpparam);
+        } catch (Throwable e) {
+            L.d("Failed to Hook QQMessagehandler", Log.getStackTraceString(e));
+        }
+        try {
+            hookNotification(lpparam);
+        } catch (Throwable e) {
+            L.d("Failed to Hook Notification", Log.getStackTraceString(e));
         }
     }
 }

@@ -191,8 +191,8 @@ public class DanmuService extends Service{
                 | LayoutParams.FLAG_FULLSCREEN;
 
         // 设置最大显示行数
-        HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
-        maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 8); // 滚动弹幕最大显示8行
+        //HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
+        //maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL, 8); // 滚动弹幕最大显示8行
         // 设置是否禁止重叠
         HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
         overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_RL, true);
@@ -206,7 +206,7 @@ public class DanmuService extends Service{
             .setScaleTextSize(1.2f)
             //.setCacheStuffer(new SpannedCacheStuffer(), mCacheStufferAdapter) // 图文混排使用SpannedCacheStuffer
             //.setCacheStuffer(new BackgroundCacheStuffer())  // 绘制背景使用BackgroundCacheStuffer
-            .setMaximumLines(maxLinesPair)
+            //.setMaximumLines(maxLinesPair)
             .preventOverlapping(overlappingEnablePair);
 
         mDanmakuView = new DanmakuView(getApplicationContext());
@@ -239,10 +239,15 @@ public class DanmuService extends Service{
             });
              mDanmakuView.prepare(mParser, mContext);
              mDanmakuView.enableDanmakuDrawingCache(true);
-             mDanmakuView.showFPS(SharedPreferencesUtil.getInstence(null).getBoolean("general_debug", false));
 
              mDispScaleX = mContext.getDisplayer().getWidth() / mContext.mDanmakuFactory.BILI_PLAYER_WIDTH;
         	    mDispScaleY = mContext.getDisplayer().getHeight() / mContext.mDanmakuFactory.BILI_PLAYER_HEIGHT;
+
+            SharedPreferences sp = SharedPreferencesUtil.getInstence(null);
+            showFPS(sp.getBoolean("general_debug", false));
+            setTextSize(sp.getString("prefs_style_size", "24f"));
+            setTextColor(sp.getString("prefs_style_color", "white"));
+            setTextShadow(sp.getBoolean("prefs_style_shadow", false));
 
             windowManager.addView(mDanmakuView, layoutParams);
         }
@@ -250,6 +255,36 @@ public class DanmuService extends Service{
 
     public void showFPS(boolean show){
         mDanmakuView.showFPS(show);
+    }
+
+    public float textSize = 0f;
+    public int textColor = Color.WHITE;
+    public boolean textShadow = false;
+
+    public boolean setTextSize(Object textSize) {
+        try{
+            this.textSize = Float.parseFloat((String)textSize);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
+
+    public float getTextSize() {
+        return (textSize < 14f?24f:textSize) * (mParser.getDisplayer().getDensity() - 0.6f);
+    }
+
+    public boolean setTextColor(Object textColor) {
+        try{
+            this.textColor = Color.parseColor((String)textColor);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
+    }
+
+    public void setTextShadow(boolean textShadow) {
+        this.textShadow = textShadow;
     }
 
     public void addDanmaku(QQMessage qqMessage) {
@@ -260,7 +295,7 @@ public class DanmuService extends Service{
         if (msg == null || msg.length() <=0) return;
 
         int type = BaseDanmaku.TYPE_SCROLL_RL;
-        String head = msg.substring(0,1);
+        char head = msg.charAt(0);
         msg = msg.substring(1);
         BaseDanmaku danmaku = null;
         if ("↑".equals(head)) {
@@ -355,21 +390,22 @@ public class DanmuService extends Service{
             return;
         }
 
-        SharedPreferences sp = SharedPreferencesUtil.getInstence(null);
-
         danmaku.userHash = uin;
         danmaku.text = qqMessage.getNickName() + ":" + msg;
-        danmaku.textSize = (sp.getFloat("prefs_style_size", 24f) * (mParser.getDisplayer().getDensity() - 0.6f));
+
+        danmaku.textSize = getTextSize();
         //danmaku.padding = 5;
         danmaku.priority = 0;  // 可能会被各种过滤器过滤并隐藏显示
         //danmaku.isLive = true;
         danmaku.time = mDanmakuView.getCurrentTime();
-        danmaku.textColor = sp.getInt("prefs_style_color", Color.BLACK);
+
+        danmaku.textColor = textColor;
         //danmaku.underlineColor = Color.GREEN;
         //danmaku.borderColor = Color.GREEN;
 
-        if (sp.getBoolean("prefs_style_shadow",false))
-            danmaku.textShadowColor = danmaku.textColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
+
+        if (textShadow)
+            danmaku.textShadowColor = textColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
 
         mDanmakuView.addDanmaku(danmaku);
     }

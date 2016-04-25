@@ -1,6 +1,7 @@
 package me.gitai.kanban.danmu;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.os.Process;
@@ -103,19 +104,19 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
         @Override
         public void onServiceDisconnected(ComponentName name) {
             // TODO Auto-generated method stub
+            danmuService = null;
         }
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             // TODO Auto-generated method stub
             danmuService = ((DanmuService.DanmuBinder)service).getService();
-
-
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getPreferenceManager().setSharedPreferencesMode(MODE_WORLD_READABLE);
         addPreferencesFromResource(R.xml.preferences);
         L.d();
         random = new Random();
@@ -127,7 +128,11 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
 
         findPreference("general_test").setOnPreferenceClickListener(this);
         findPreference("general_enable").setOnPreferenceChangeListener(this);
-        findPreference("general_enable").setOnPreferenceChangeListener(this);
+        findPreference("general_debug").setOnPreferenceChangeListener(this);
+
+        findPreference("prefs_style_size").setOnPreferenceChangeListener(this);
+        findPreference("prefs_style_color").setOnPreferenceChangeListener(this);
+        findPreference("prefs_style_shadow").setOnPreferenceChangeListener(this);
 
         findPreference("about_app_version").setSummary(
                 String.format("%s %s(%d)", BuildConfig.APPLICATION_ID, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
@@ -147,7 +152,8 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
                 QQMessage testMsg = new QQMessage();
                 testMsg.setNickName(msg[0]);
                 testMsg.setMsg(msg[random.nextInt(msg.length - 1) + 1]);
-                danmuService.addDanmaku(testMsg);
+                if (danmuService != null)
+                    danmuService.addDanmaku(testMsg);
                 return true;
         }
         return false;
@@ -159,13 +165,28 @@ public class MainActivity extends PreferenceActivity implements Preference.OnPre
             case "general_enable":
                 Intent intent = new Intent(this, DanmuService.class);
                 if ((Boolean) newValue){
-                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                    if (danmuService == null)
+                        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                 }else{
-                    unbindService(serviceConnection);
-                    stopService(intent);
+                    if (danmuService != null){
+                        stopService(intent);
+                        danmuService = null;
+                    }
                 }
+                return true;
             case "general_debug":
-                danmuService.showFPS((Boolean) newValue);
+                if (danmuService!=null)
+                    danmuService.showFPS((Boolean) newValue);
+                    return true;
+            case "prefs_style_size":
+                if (danmuService!=null)
+                    return danmuService.setTextSize(newValue);
+            case "prefs_style_color":
+                if (danmuService!=null)
+                    return danmuService.setTextColor(newValue);
+            case "prefs_style_shadow":
+                if (danmuService!=null)
+                    danmuService.textShadow = (Boolean) newValue;
         }
         return false;
     }

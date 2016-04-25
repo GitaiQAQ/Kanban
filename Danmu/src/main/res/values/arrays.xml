@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="style_size">
+        <item>14f</item>
+        <item>15f</item>
+        <item>16f</item>
+        <item>17f</item>
+        <item>18f</item>
+        <item>19f</item>
+        <item>20f</item>
+        <item>21f</item>
+        <item>22f</item>
+        <item>23f</item>
+        <item>24f</item>
+        <item>25f</item>
+        <item>26f</item>
+        <item>27f</item>
+        <item>28f</item>
+        <item>29f</item>
+        <item>30f</item>
+        <item>31f</item>
+        <item>32f</item>
+        <item>33f</item>
+        <item>34f</item>
+        <item>35f</item>
+        <item>36f</item>
+        <item>37f</item>
+        <item>38f</item>
+        <item>39f</item>
+        <item>40f</item>
+    </string-array>
+    <array name="style_color">
+        <item>black</item>
+        <item>darkgray</item>
+        <item>gray</item>
+        <item>lightgray</item>
+        <item>white</item>
+        <item>red</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>green</item>
+    </array>
+</resources>
