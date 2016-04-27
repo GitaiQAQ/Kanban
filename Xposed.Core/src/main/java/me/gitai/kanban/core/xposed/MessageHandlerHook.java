@@ -42,6 +42,65 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
 
     private String packageName;
 
+    private XSharedPreferences sp;
+
+    @Override
+    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
+        Application qQApplication = AndroidAppHelper.currentApplication();
+
+        // Save logs to dir "/sdcard/kanban/logs" and output by XposedBridge and Log
+        L.setTag(packageName = lpparam.packageName);
+        L.setLogcatEnable(qQApplication, true);
+        L.setLogToFileEnable(true, qQApplication, Constant.PATH_DATA_LOG);
+        L.setXposedMode(true);
+
+        sp = new XSharedPreferences(BuildConfig.APPLICATION_ID);
+        if (!sp.getBoolean("general_enable", false)) {
+            L.d(BuildConfig.APPLICATION_ID);
+            L.d("Enable: " + "false");
+            return;
+        }
+
+        // filtrate by packageName
+        // * com.tencent.qq.kddi
+        // * com.tencent.qqlite
+        // * com.tencent.mobileqq
+        // * com.tencent.mobileqqi
+        if (!(packageName).startsWith("com.tencent.qq")
+        	&& !packageName.startsWith("com.tencent.mobileqq")) {
+            L.d("packageName: " + packageName);
+            return;
+        }
+
+        // init Static Class.
+        initStaticClass(lpparam);
+
+        if ("com.tencent.qqlite".equals(packageName)) {
+            try {
+                hookInjectUtils(lpparam);
+            } catch (Throwable e) {
+                L.d("Failed to Hook InjectUtils", Log.getStackTraceString(e));
+                throw e;
+            }
+        }
+
+        if ("com.tencent.qq.kddi".equals(packageName)) {
+            try {
+                hookQQMessagehandler(lpparam);
+            } catch (Throwable e) {
+                L.d("Failed to Hook QQMessagehandler", Log.getStackTraceString(e));
+                throw e;
+            }
+        }
+
+        try {
+            hookNotification(lpparam);
+        } catch (Throwable e) {
+            L.d("Failed to Hook Notification", Log.getStackTraceString(e));
+            throw e;
+        }
+    }
+
     /*private IQQAidlInterface mInterface;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -61,11 +120,26 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         QQAppInterface = (QQAppInterface != null)?
                 QQAppInterface:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.QQAppInterface");
 
-        MobileQQ = (MobileQQ != null)?
-                MobileQQ:lpparam.classLoader.loadClass("mqq.app.MobileQQ");
+        /*MobileQQ = (MobileQQ != null)?
+                MobileQQ:lpparam.classLoader.loadClass("mqq.app.MobileQQ");*/
+
+        ContactUtils = (ContactUtils != null)?
+            ContactUtils:lpparam.classLoader.loadClass("com.tencent.mobileqq.utils.ContactUtils");
 
         SessionInfo = (SessionInfo != null)?
                 SessionInfo:lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.aio.SessionInfo");
+
+        ChatActivityFacade = (ChatActivityFacade != null)?
+                ChatActivityFacade:lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade");
+
+        // After exlibs load complete at QQLite
+        if ("com.tencent.qq.kddi".equals(packageName)) {
+        	   initStaticClassAfterInject(lpparam);
+        }
+    }
+
+    private void initStaticClassAfterInject(XC_LoadPackage.LoadPackageParam lpparam)
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
 
         QQMessageFacade = (QQMessageFacade != null)?
                 QQMessageFacade:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade");
@@ -73,14 +147,8 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         QQMessageFacadeMessage = (QQMessageFacadeMessage != null)?
                 QQMessageFacadeMessage:lpparam.classLoader.loadClass("com.tencent.mobileqq.app.message.QQMessageFacade$Message");
 
-        ContactUtils = (ContactUtils != null)?
-                ContactUtils:lpparam.classLoader.loadClass("com.tencent.mobileqq.utils.ContactUtils");
-
         FriendManager = (FriendManager != null)?
-                FriendManager:lpparam.classLoader.loadClass("com.tencent.mobileqq.model.FriendManager");
-
-        ChatActivityFacade = (ChatActivityFacade != null)?
-                ChatActivityFacade:lpparam.classLoader.loadClass("com.tencent.mobileqq.activity.ChatActivityFacade");
+	                FriendManager:lpparam.classLoader.loadClass("com.tencent.mobileqq.model.FriendManager");
     }
 
     private void initField()
@@ -115,6 +183,24 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
                 }
             } while((clz = clz.getSuperclass()) != null);
         }*/
+    }
+
+    private void hookInjectUtils(final XC_LoadPackage.LoadPackageParam lpparam)
+            throws ClassNotFoundException,NoSuchFieldException,IllegalAccessException{
+
+        String className = "com.tencent.mobileqq.app.InjectUtils";
+        String methodName = "a";
+
+        XposedHelpers.findAndHookMethod(className, lpparam.classLoader, methodName,
+            Application.class, boolean.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    //super.afterHookedMethod(param);
+                    initStaticClassAfterInject(lpparam);
+                    hookQQMessagehandler(lpparam);
+                }
+            });
+
     }
 
     private void hookQQMessagehandler(XC_LoadPackage.LoadPackageParam lpparam)
@@ -249,6 +335,7 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
 
     private String getNickName(Object appRuntime, String selfuin, String senderuin, String frienduin){
         if (selfuin.equals(senderuin)) return "\u6211";
+        if (FriendManager == null || ContactUtils == null) return senderuin;
         try{
             if (friendManager == null) {
                 HashMap managers = (HashMap)XposedHelpers.getObjectField(appRuntime, "managers");
@@ -272,41 +359,6 @@ public class MessageHandlerHook implements IXposedHookLoadPackage {
         }catch(Throwable e){
             L.e(e);
             return senderuin;
-        }
-    }
-
-    private XSharedPreferences sp;
-
-    @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        Application qQApplication = AndroidAppHelper.currentApplication();
-
-        L.setLogcatEnable(qQApplication, true);
-        L.setLogToFileEnable(true, qQApplication, Constant.PATH_DATA_LOG);
-        L.setXposedMode(true);
-
-        sp = new XSharedPreferences(BuildConfig.APPLICATION_ID);
-        if (!sp.getBoolean("general_enable", false)) {
-            L.d(BuildConfig.APPLICATION_ID);
-            L.d("Enable: " + "false");
-            return;
-        }
-
-        if (!(packageName = lpparam.packageName)./*equals("com.tencent.qq.kddi")*/startsWith("com.tencent.qq")) {
-            L.d("packageName: " + packageName);
-            return;
-        }
-
-        initStaticClass(lpparam);
-        try {
-            hookQQMessagehandler(lpparam);
-        } catch (Throwable e) {
-            L.d("Failed to Hook QQMessagehandler", Log.getStackTraceString(e));
-        }
-        try {
-            hookNotification(lpparam);
-        } catch (Throwable e) {
-            L.d("Failed to Hook Notification", Log.getStackTraceString(e));
         }
     }
 }

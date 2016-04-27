@@ -37,7 +37,7 @@ subprojects {
                 ],
 
                 versionCode : 19,
-                versionName : "2.0.2-beta"
+                versionName : "2.0.2"
         ]
 
         versions = [
